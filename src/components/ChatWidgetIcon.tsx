@@ -1,7 +1,7 @@
 import React, { type JSX } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import type { ViewStyle, ImageStyle, ImageSourcePropType } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import type { ViewStyle, ImageStyle } from 'react-native';
 import { PopupBubbleText } from './PopupBubbleText';
 import Animated, {
   useSharedValue,
@@ -18,6 +18,7 @@ interface TChatWidgetIconProps {
   right?: number;
   enableShineAnimation?: boolean;
   onPress?: () => void;
+  iconSource?: ImageSourcePropType;
 }
 
 export const ChatWidgetIcon = ({
@@ -25,6 +26,7 @@ export const ChatWidgetIcon = ({
   right = 16,
   enableShineAnimation = true,
   onPress,
+  iconSource,
 }: TChatWidgetIconProps): JSX.Element => {
   const [showBubble, setShowBubble] = React.useState(false);
   const shineProgress = useSharedValue(0);
@@ -96,10 +98,14 @@ export const ChatWidgetIcon = ({
         onPressOut={handlePressOut}
       >
         <View style={styles.iconWrapper}>
-          <Image
-            source={require('../assets/icons/chatWidget.png')}
-            style={styles.chatIcon}
-          />
+          {iconSource ? (
+            <Image source={iconSource} style={styles.chatIcon} />
+          ) : (
+            <Image
+              source={require('../assets/icons/chatWidget.png')}
+              style={styles.chatIcon}
+            />
+          )}
           {enableShineAnimation && (
             <Animated.View
               pointerEvents="none"
