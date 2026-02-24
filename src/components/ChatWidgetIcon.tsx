@@ -1,6 +1,6 @@
 import React, { type JSX } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import type { ViewStyle, ImageStyle, ImageSourcePropType } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
+import type { ViewStyle, ImageStyle, TextStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { PopupBubbleText } from './PopupBubbleText';
 import Animated, {
@@ -18,7 +18,7 @@ interface TChatWidgetIconProps {
   right?: number;
   enableShineAnimation?: boolean;
   onPress?: () => void;
-  iconSource?: ImageSourcePropType;
+  iconUri?: string;
 }
 
 export const ChatWidgetIcon = ({
@@ -26,7 +26,7 @@ export const ChatWidgetIcon = ({
   right = 16,
   enableShineAnimation = true,
   onPress,
-  iconSource,
+  iconUri,
 }: TChatWidgetIconProps): JSX.Element => {
   const [showBubble, setShowBubble] = React.useState(false);
   const shineProgress = useSharedValue(0);
@@ -98,13 +98,12 @@ export const ChatWidgetIcon = ({
         onPressOut={handlePressOut}
       >
         <View style={styles.iconWrapper}>
-          {iconSource ? (
-            <Image source={iconSource} style={styles.chatIcon} />
+          {iconUri ? (
+            <Image source={{ uri: iconUri }} style={styles.chatIcon} />
           ) : (
-            <Image
-              source={require('../assets/icons/chatWidget.png')}
-              style={styles.chatIcon}
-            />
+            <View style={[styles.chatIcon, styles.defaultIconContainer]}>
+              <Text style={styles.defaultChatIcon}>💬</Text>
+            </View>
           )}
           {enableShineAnimation && (
             <Animated.View
@@ -146,7 +145,9 @@ interface TChatWidgetIconStyles {
   iconWrapper: ViewStyle;
   shineContainer: ViewStyle;
   shineGradient: ViewStyle;
-  [key: string]: ViewStyle | ImageStyle;
+  defaultIconContainer: ViewStyle;
+  defaultChatIcon: TextStyle;
+  [key: string]: ViewStyle | ImageStyle | TextStyle;
 }
 
 const styles = StyleSheet.create<TChatWidgetIconStyles>({
@@ -182,5 +183,14 @@ const styles = StyleSheet.create<TChatWidgetIconStyles>({
   shineGradient: {
     width: '100%',
     height: '100%',
+  },
+  defaultIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3B82F6',
+  },
+  defaultChatIcon: {
+    fontSize: 24,
+    color: '#FFFFFF',
   },
 });
