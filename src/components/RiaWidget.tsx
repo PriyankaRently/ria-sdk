@@ -6,7 +6,7 @@ import { ChatbotLoader } from './ChatbotLoader';
 import { ChatMessageText } from './ChatMessageText';
 import { MessageInput } from './MessageInput';
 import { TypingDots } from './TypingDotsComponent';
-import { RDColors, Spacings } from '../tokens';
+import { Colors, Spacings } from '../tokens';
 
 type Message = {
   id: string;
@@ -121,7 +121,7 @@ export const RiaWidget: React.FC<RiaWidgetProps> = ({
             </View>
           )}
           <View style={styles.staticSection}>
-            <TypingDots dotColor={RDColors.neutral[600]} animationDuration={1500} />
+            <TypingDots dotColor={Colors.neutral[600]} animationDuration={1500} />
           </View>
         </ScrollView>
         <View style={styles.inputContainer}>
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '90%',
     height: '80%',
-    backgroundColor: RDColors.white,
+    backgroundColor: Colors.white,
     borderRadius: 10,
     overflow: 'hidden',
   },
@@ -157,19 +157,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: Spacings.md,
     borderBottomWidth: 1,
-    borderBottomColor: RDColors.gray[200],
+    borderBottomColor: Colors.gray[200],
   },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: RDColors.gray[800],
+    color: Colors.gray[800],
   },
   closeButton: {
     padding: Spacings.xx_sm,
   },
   closeText: {
     fontSize: 20,
-    color: RDColors.neutral[600],
+    color: Colors.neutral[600],
   },
   chatContainer: {
     flex: 1,
@@ -187,6 +187,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     padding: Spacings.md,
     borderTopWidth: 1,
-    borderTopColor: RDColors.gray[200],
+    borderTopColor: Colors.gray[200],
   },
 });

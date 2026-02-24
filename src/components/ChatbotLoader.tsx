@@ -1,7 +1,7 @@
 import React, { type JSX } from 'react';
 import { View, StyleSheet, Animated, Easing, Text } from 'react-native';
 import type { ViewStyle } from 'react-native';
-import { RDColors, Spacings } from '../tokens';
+import { Colors, Spacings } from '../tokens';
 
 interface TChatbotLoaderProps {
   style?: ViewStyle;
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '400',
-    color: RDColors.gray[700],
+    color: Colors.gray[700],
   },
   logo: {
     width: 32,
@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: 12,
-    color: RDColors.neutral[600],
+    color: Colors.neutral[600],
   },
 });

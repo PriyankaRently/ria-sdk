@@ -1,7 +1,7 @@
 import React, { type JSX } from 'react';
 import { Keyboard, StyleSheet, TextInput, TouchableOpacity, View, Text } from 'react-native';
 import { Platform } from 'react-native';
-import { RDColors } from '../tokens';
+import { Colors } from '../tokens';
 
 interface TMessageInputProps {
   onInputFocus?: () => void;
@@ -37,7 +37,7 @@ export const MessageInput = ({
     onSend?.();
   };
 
-  const sendBackgroundColor = !disabled ? RDColors.blue[500] : RDColors.neutral[300];
+  const sendBackgroundColor = !disabled ? Colors.blue[500] : Colors.neutral[300];
 
   return (
     <View
@@ -53,10 +53,11 @@ export const MessageInput = ({
       <TextInput
         style={styles.textInput}
         placeholder="Start a search or ask a question..."
-        placeholderTextColor={RDColors.gray[400]}
+        placeholderTextColor={Colors.gray[400]}
         onChangeText={onTextChange}
         value={text}
         multiline={true}
+        editable={!disabled}
         onFocus={onInputFocus}
       />
       <TouchableOpacity
@@ -82,17 +83,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: RDColors.neutral[600],
+    shadowColor: Colors.neutral[600],
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.7,
     shadowRadius: 15,
     elevation: 10,
-    borderColor: RDColors.neutral[300],
+    borderColor: Colors.neutral[300],
     borderWidth: 1,
     borderRadius: 24,
     paddingHorizontal: 10,
     marginTop: 8,
-    backgroundColor: RDColors.white,
+    backgroundColor: Colors.white,
     paddingVertical: Platform.OS === 'ios' ? 12 : 8,
   },
   sendIconContainer: {
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sendIconText: {
-    color: RDColors.white,
+    color: Colors.white,
     fontSize: 16,
     transform: [{ rotate: '90deg' }],
   },
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginRight: 12,
     marginLeft: 4,
-    color: RDColors.gray[800],
+    color: Colors.gray[800],
     minHeight: 40,
     maxHeight: 100,
   },

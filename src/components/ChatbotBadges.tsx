@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 import { View, StyleSheet, Text } from "react-native"
-import { RDColors, Spacings } from '../tokens';
+import { Colors, Spacings } from '../tokens';
 
 interface TChatbotBadgeProps {
     timeExceeded: boolean;
@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        color: RDColors.white,
+        color: Colors.white,
     },
 });

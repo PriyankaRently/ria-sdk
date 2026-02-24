@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Text, Animated, Easing } from 'react-native';
-import { RDColors, Spacings } from '../tokens';
+import { Colors, Spacings } from '../tokens';
 
 export const TypingDots = ({
-  dotColor = RDColors.neutral[600],
+  dotColor = Colors.neutral[600],
   animationDuration = 1500,
   textStyle = {},
 }) => {
@@ -47,7 +47,7 @@ export const TypingDots = ({
   const interpolateColor = (scale: Animated.Value) => {
     return scale.interpolate({
       inputRange: [1, 1.2, 1.6],
-      outputRange: [dotColor, RDColors.neutral[300], RDColors.neutral[300]],
+      outputRange: [dotColor, Colors.neutral[300], Colors.neutral[300]],
     });
   };
 
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   dot: {
     width: 2,
     height: 2,
-    backgroundColor: RDColors.neutral[600],
+    backgroundColor: Colors.neutral[600],
     borderRadius: 9999,
     opacity: 0.4,
   },

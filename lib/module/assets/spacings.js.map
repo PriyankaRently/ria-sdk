@@ -1,0 +1,1 @@
+{"version":3,"names":["Spacings","sm","x_sm","xx_sm","md","lg","xl"],"sourceRoot":"../../../src","sources":["assets/spacings.ts"],"mappings":";;AAAA;AACA,OAAO,MAAMA,QAAQ,GAAG;EACtB,CAAC,EAAE,EAAE;EACL,CAAC,EAAE,EAAE;EACLC,EAAE,EAAE,CAAC;EACLC,IAAI,EAAE,CAAC;EACPC,KAAK,EAAE,CAAC;EACRC,EAAE,EAAE,EAAE;EACNC,EAAE,EAAE,EAAE;EACNC,EAAE,EAAE;AACN,CAAC","ignoreList":[]}

@@ -1,7 +1,7 @@
 import { type JSX } from 'react';
 import { View, StyleSheet, Text, type ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { RDColors, Spacings } from '../tokens';
+import { Colors, Spacings } from '../tokens';
 
 interface TPopupBubbleTextProps {
   text: string;
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   textContainer: {
-    backgroundColor: RDColors.shades[200],
+    backgroundColor: Colors.shades[200],
     paddingHorizontal: Spacings.md,
     paddingVertical: Spacings.x_sm,
     borderRadius: 80,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     gap: Spacings.x_sm,
   },
   text: {
-    color: RDColors.shades[0],
+    color: Colors.shades[0],
     fontSize: 12,
     fontWeight: '500',
   },
