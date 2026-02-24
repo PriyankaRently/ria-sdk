@@ -1,7 +1,17 @@
 import React, { type JSX } from 'react';
-import { View, StyleSheet, Animated, Easing, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import type { ViewStyle, TextStyle } from 'react-native';
+import type { ViewStyle, ImageStyle } from 'react-native';
+import { PopupBubbleText } from './PopupBubbleText';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+  interpolate,
+  Extrapolate,
+  Easing,
+} from 'react-native-reanimated';
 
 interface TChatWidgetIconProps {
   bottom?: number;
@@ -11,79 +21,103 @@ interface TChatWidgetIconProps {
 }
 
 export const ChatWidgetIcon = ({
-  bottom = 20,
-  right = 20,
+  bottom = 16,
+  right = 16,
   enableShineAnimation = true,
   onPress,
 }: TChatWidgetIconProps): JSX.Element => {
-  const shineValue = React.useRef(new Animated.Value(0)).current;
+  const [showBubble, setShowBubble] = React.useState(false);
+  const shineProgress = useSharedValue(0);
 
   React.useEffect(() => {
-    if (enableShineAnimation) {
-      const shineAnimation = Animated.loop(
-        Animated.sequence([
-          Animated.timing(shineValue, {
-            toValue: 1,
-            duration: 2500,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-          Animated.timing(shineValue, {
-            toValue: 0,
-            duration: 0,
-            useNativeDriver: true,
-          }),
-        ])
+    if (!enableShineAnimation) return;
+
+    const startShineAnimation = () => {
+      shineProgress.value = withSequence(
+        withTiming(1, { duration: 2500, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 0 })
       );
-      const interval = setInterval(() => {
-        shineAnimation.start();
-      }, 3000);
-      return () => {
-        clearInterval(interval);
-        shineAnimation.stop();
-      };
-    }
-    return;
-  }, [enableShineAnimation]);
+    };
+
+    startShineAnimation();
+
+    const interval = setInterval(() => {
+      startShineAnimation();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [enableShineAnimation, shineProgress]);
 
   const handlePress = () => {
     if (onPress) onPress();
   };
 
+  const handleLongPress = () => {
+    setShowBubble(true);
+  };
+
+  const handlePressOut = () => {
+    setShowBubble(false);
+  };
+
+  const shineAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      shineProgress.value,
+      [0, 0.3, 0.7, 1],
+      [0, 1, 1, 0],
+      Extrapolate.CLAMP
+    );
+
+    const translateX = interpolate(
+      shineProgress.value,
+      [0, 1],
+      [-80, 80],
+      Extrapolate.CLAMP
+    );
+
+    const translateY = interpolate(
+      shineProgress.value,
+      [0, 1],
+      [-80, 80],
+      Extrapolate.CLAMP
+    );
+
+    return {
+      opacity,
+      transform: [{ translateX }, { translateY }],
+    };
+  });
+
   return (
     <View style={[styles.container, { bottom, right }]}>
-      <TouchableOpacity onPress={handlePress} style={styles.iconWrapper}>
+      <TouchableOpacity
+        onPress={handlePress}
+        onLongPress={handleLongPress}
+        onPressOut={handlePressOut}
+      >
         <View style={styles.iconWrapper}>
-          <Text style={styles.chatIcon}>💬</Text>
+          <Image
+            source={require('../assets/icons/chatWidget.png')}
+            style={styles.chatIcon}
+          />
           {enableShineAnimation && (
             <Animated.View
               pointerEvents="none"
-              style={[
-                styles.shineContainer,
-                {
-                  opacity: shineValue.interpolate({
-                    inputRange: [0, 0.3, 0.7, 1],
-                    outputRange: [0, 1, 1, 0],
-                  }),
-                  transform: [
-                    {
-                      translateX: shineValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [-80, 80],
-                      }),
-                    },
-                    {
-                      translateY: shineValue.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [-80, 80],
-                      }),
-                    },
-                  ],
-                },
-              ]}
+              // @ts-ignore
+              style={[styles.shineContainer, shineAnimatedStyle]}
             >
               <LinearGradient
-                colors={['transparent', 'transparent', 'transparent', 'rgba(220, 220, 220, 0.99)', 'rgba(255, 255, 255, 1)', 'rgba(220, 220, 220, 0.99)', 'transparent', 'transparent', 'transparent']}
+                colors={[
+                  'transparent',
+                  'transparent',
+                  'transparent',
+                  'rgba(220, 220, 220, 0.99)',
+                  'rgba(255, 255, 255, 1)',
+                  'rgba(220, 220, 220, 0.99)',
+                  'transparent',
+                  'transparent',
+                  'transparent',
+                ]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.shineGradient}
@@ -92,17 +126,21 @@ export const ChatWidgetIcon = ({
           )}
         </View>
       </TouchableOpacity>
+      {showBubble && (
+        <PopupBubbleText text="Chat with us" style={styles.bubblePosition} />
+      )}
     </View>
   );
 };
 
 interface TChatWidgetIconStyles {
   container: ViewStyle;
+  bubblePosition: ViewStyle;
+  chatIcon: ImageStyle;
   iconWrapper: ViewStyle;
-  chatIcon: TextStyle;
   shineContainer: ViewStyle;
   shineGradient: ViewStyle;
-  [key: string]: ViewStyle | TextStyle;
+  [key: string]: ViewStyle | ImageStyle;
 }
 
 const styles = StyleSheet.create<TChatWidgetIconStyles>({
@@ -118,13 +156,15 @@ const styles = StyleSheet.create<TChatWidgetIconStyles>({
     overflow: 'hidden',
     borderRadius: 25,
     position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
   },
   chatIcon: {
-    fontSize: 24,
-    color: '#FFFFFF',
+    height: 50,
+    width: 50,
+  },
+  bubblePosition: {
+    position: 'absolute',
+    right: 60,
+    bottom: 0,
   },
   shineContainer: {
     position: 'absolute',
