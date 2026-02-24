@@ -1,12 +1,34 @@
-import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-ria-sdk';
 
-const result = multiply(3, 7);
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { RiaWidget, ChatWidgetIcon } from 'react-native-ria-sdk';
 
 export default function App() {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  if (modalVisible) {
+    return (
+      <View style={styles.container}>
+        <RiaWidget onClose={handleCloseModal} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <ChatWidgetIcon
+        screenName="Home"
+        enableShineAnimation={true}
+        onPress={handleOpenModal}
+      />
     </View>
   );
 }
@@ -14,7 +36,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
