@@ -31,9 +31,7 @@ interface ChatMessageTextProps {
 const LikeButton = ({ onPress, status, currentStatus, iconName, style }: LikeButtonProps): JSX.Element => {
   const isSelected = status === currentStatus;
   const backgroundColor = isSelected
-    ? status === 1
-      ? Colors.success[100]
-      : Colors.error[100]
+    ? Colors.neutral[100]
     : undefined;
 
   return (

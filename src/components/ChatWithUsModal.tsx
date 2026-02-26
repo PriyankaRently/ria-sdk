@@ -95,6 +95,16 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
   const [localShowEndDropdown, setLocalShowEndDropdown] = useState(showEndDropdown);
   const [localKeyboardVisible, setLocalKeyboardVisible] = useState(keyboardVisible);
 
+  const defaultMessage: Message = {
+    id: 'default',
+    content: 'Thank you for choosing our chatbot! How can I help you today?',
+    timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+    user: 'AI',
+    likeStatus: 0,
+  };
+
+  const messagesToShow = chatMessages.length > 0 ? chatMessages : [defaultMessage];
+
   useEffect(() => {
     if (showModal) {
       bottomSheetModalRef.current?.present();
@@ -257,7 +267,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                   : {}}
                   onContentSizeChange={handleScrollDown}
                 >
-                  {chatMessages.map((item, index) => (
+                  {messagesToShow.map((item, index) => (
                     <ChatMessageText 
                       key={index} 
                       message={item} 
@@ -282,10 +292,6 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                   onTextChange={onTextChange}
                   onSend={onSend}
                   disabled={disabled}
-                  responseMessage={chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : undefined}
-                  chatWidgetUri={chatWidgetUri}
-                  onLike={onLike}
-                  onDislike={onDislike}
                 />
                 :
                 (<View style={ChatWithUsModalStyles.footerContainer} >
