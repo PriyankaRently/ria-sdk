@@ -7,6 +7,7 @@ import { ChatWidgetIcon } from './components/ChatWidgetIcon';
 import { MessageInput } from './components/MessageInput';
 import { PopupBubbleText } from './components/PopupBubbleText';
 import { TypingDots } from './components/TypingDotsComponent';
+import { RiaWidget } from './components/RiaWidget';
 import { ChatWithUsModal } from './components/ChatWithUsModal';
 
 export function multiply(a: number, b: number): number {

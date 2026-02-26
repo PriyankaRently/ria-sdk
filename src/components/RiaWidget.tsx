@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { AiDisclaimer } from './AiDisclaimer';
-import { LiveAgentHandoffBadge, NoNetworkBadge } from './ChatbotBadges';
-import { ChatbotLoader } from './ChatbotLoader';
-import { ChatMessageText } from './ChatMessageText';
-import { MessageInput } from './MessageInput';
-import { TypingDots } from './TypingDotsComponent';
-import { Colors, Spacings } from '../tokens';
+import React from "react";
+import { ChatWithUsModal } from "./ChatWithUsModal";
+
+/**
+ * RiaWidget component serves as the root entry point for chatbot-related features within the application.
+ * 
+ * @remarks
+ * This component is designed with future scalability in mind, acting as the foundational wrapper for all chatbot functionalities.
+ * It currently renders the `ChatWithUsModal` component, but is intended to be extended to support additional features such as voice assistant and other interactive capabilities.
+ * All future enhancements and features related to the chatbot will have their root integration within this file.
+ */
 
 type Message = {
   id: string;
@@ -17,176 +19,36 @@ type Message = {
 };
 
 interface RiaWidgetProps {
+  showModal?: boolean;
   onClose?: () => void;
-  initialMessages?: Message[];
+  chatMessages?: Message[];
+  isTyping?: boolean;
+  showLoader?: boolean;
   showNoNetwork?: boolean;
   showLiveAgentHandoff?: boolean;
-  showLoader?: boolean;
   timeExceeded?: boolean;
+  showDisclaimer?: boolean;
+  previousChatSession?: any;
+  onInputFocus?: () => void;
+  keyboardVisible?: boolean;
+  onInputHeightChange?: () => void;
+  onSend?: () => void;
+  disabled?: boolean;
+  text?: string;
+  onTextChange?: (text: string) => void;
+  showTextInput?: boolean;
+  onPressNotContinueChat?: () => void;
+  onPressYesContinueChat?: () => void;
+  isOffline?: boolean;
+  isLiveAgentConnected?: boolean;
+  isLiveAgentHandoff?: boolean;
+  onEndChat?: () => void;
+  showEndDropdown?: boolean;
+  onToggleEndDropdown?: () => void;
 }
 
-export const RiaWidget: React.FC<RiaWidgetProps> = ({ 
-  onClose, 
-  initialMessages = [], 
-  showNoNetwork = false,
-  showLiveAgentHandoff = false,
-  showLoader = false,
-  timeExceeded = false
-}) => {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [inputText, setInputText] = useState('');
-
-  useEffect(() => {
-    if (messages.length === 0) {
-      // Initial AI greeting message
-      const initialMessage: Message = {
-        id: 'initial',
-        content: 'How can I help you?',
-        timestamp: new Date().toLocaleTimeString(),
-        user: 'AI',
-        likeStatus: 0,
-      };
-      setMessages([initialMessage]);
-    }
-  }, []);
-
-  const handleSendMessage = () => {
-    if (!inputText.trim()) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputText,
-      timestamp: new Date().toLocaleTimeString(),
-      user: 'PROSPECT',
-    };
-
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      content: 'Thank you for interacting with the chatbot model.',
-      timestamp: new Date().toLocaleTimeString(),
-      user: 'AI',
-      likeStatus: 0,
-    };
-
-    setMessages(prev => [...prev, userMessage, botMessage]);
-    setInputText('');
-  };
-
-  const handleInputChange = (text: string) => {
-    setInputText(text);
-  };
-
-  const handleClose = () => {
-    onClose?.();
-  };
-
-  return (
-    <View style={styles.modalContainer}>
-      <View style={styles.modalContent}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Chat with RIA</Text>
-          <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <Text style={styles.closeText}>✕</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView style={styles.chatContainer}>
-          {true && (
-            <View style={styles.disclaimerSection}>
-              <AiDisclaimer
-                showDisclaimer={true}
-                previousChatSession={{ id: null }}
-                chatMessages={[]}
-              />
-            </View>
-          )}
-          {messages.map(message => (
-            <View key={message.id} style={styles.messageSection}>
-              <ChatMessageText message={message} />
-            </View>
-          ))}
-          {/* Static UI elements */}
-          {showNoNetwork && (
-            <View style={styles.staticSection}>
-              <NoNetworkBadge />
-            </View>
-          )}
-          {showLiveAgentHandoff && (
-            <View style={styles.staticSection}>
-              <LiveAgentHandoffBadge timeExceeded={timeExceeded} />
-            </View>
-          )}
-          {showLoader && (
-            <View style={styles.staticSection}>
-              <ChatbotLoader showChatbotLoadingMessage={false} />
-            </View>
-          )}
-          <View style={styles.staticSection}>
-            <TypingDots dotColor={Colors.neutral[600]} animationDuration={1500} />
-          </View>
-        </ScrollView>
-        <View style={styles.inputContainer}>
-          <MessageInput
-            text={inputText}
-            onTextChange={handleInputChange}
-            onSend={handleSendMessage}
-            disabled={false}
-          />
-        </View>
-      </View>
-    </View>
-  );
+export const RiaWidget: React.FC<RiaWidgetProps> = (props) => {
+    return (
+        <ChatWithUsModal {...props} />
+    );
 };
-
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    width: '90%',
-    height: '80%',
-    backgroundColor: Colors.white,
-    borderRadius: 10,
-    overflow: 'hidden',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: Spacings.md,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.gray[200],
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: Colors.gray[800],
-  },
-  closeButton: {
-    padding: Spacings.xx_sm,
-  },
-  closeText: {
-    fontSize: 20,
-    color: Colors.neutral[600],
-  },
-  chatContainer: {
-    flex: 1,
-    padding: Spacings.md,
-  },
-  disclaimerSection: {
-    marginBottom: Spacings.md,
-  },
-  messageSection: {
-    marginBottom: Spacings.sm,
-  },
-  staticSection: {
-    marginBottom: Spacings.sm,
-  },
-  inputContainer: {
-    padding: Spacings.md,
-    borderTopWidth: 1,
-    borderTopColor: Colors.gray[200],
-  },
-});

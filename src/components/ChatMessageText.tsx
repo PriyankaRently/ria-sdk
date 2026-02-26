@@ -183,10 +183,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacings.md,
     maxWidth: '80%',
   },
-  userMessageText: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: Colors.gray[900],
-    fontFamily: Fonts.primary.regular,
+  likeIcon: {
+    fontSize: 16,
+    color: Colors.neutral[600],
   },
-});
+  chatWidget: {
+    fontSize: 20,
+  },
+  senderName: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: Colors.neutral[900],
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacings.sm,
+  },
+  likeButtonGap: {
+    marginRight: Spacings.sm,
+  },

@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     gap: Spacings.x_sm,
   },
   text: {
-    color: Colors.neutral[50],
+    color: Colors.neutral[100],
     fontSize: 12,
     fontWeight: '500',
   },
