@@ -103,7 +103,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
     likeStatus: 0,
   };
 
-  const messagesToShow = chatMessages.length > 0 ? chatMessages : [defaultMessage];
+  const messagesToShow = chatMessages.length > 0 ? chatMessages : [];
 
   useEffect(() => {
     if (showModal) {
@@ -292,6 +292,10 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                   onTextChange={onTextChange}
                   onSend={onSend}
                   disabled={disabled}
+                  responseMessage={chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : defaultMessage}
+                  chatWidgetUri={chatWidgetUri}
+                  onLike={onLike}
+                  onDislike={onDislike}
                 />
                 :
                 (<View style={ChatWithUsModalStyles.footerContainer} >
