@@ -34,6 +34,10 @@ interface ChatWithUsModalProps {
     showEndDropdown?: boolean;
     onToggleEndDropdown?: () => void;
     logoUri?: string;
+    onLike?: (messageId: string, likeStatus: number) => void;
+    onDislike?: (messageId: string, likeStatus: number) => void;
+    chatWidgetUri?: string;
+    rentlyChatIconUri?: string;
 }
 export declare const ChatWithUsModal: React.FC<ChatWithUsModalProps>;
 export {};

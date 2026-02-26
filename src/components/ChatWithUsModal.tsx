@@ -46,6 +46,10 @@ interface ChatWithUsModalProps {
   showEndDropdown?: boolean;
   onToggleEndDropdown?: () => void;
   logoUri?: string;
+  onLike?: (messageId: string, likeStatus: number) => void;
+  onDislike?: (messageId: string, likeStatus: number) => void;
+  chatWidgetUri?: string;
+  rentlyChatIconUri?: string;
 }
 
 export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
@@ -76,6 +80,10 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
   showEndDropdown = false,
   onToggleEndDropdown,
   logoUri,
+  onLike,
+  onDislike,
+  chatWidgetUri,
+  rentlyChatIconUri,
 }) => {
   const snapPoints = ["90%"];
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -250,7 +258,14 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                   onContentSizeChange={handleScrollDown}
                 >
                   {chatMessages.map((item, index) => (
-                    <ChatMessageText key={index} message={item} />
+                    <ChatMessageText 
+                      key={index} 
+                      message={item} 
+                      onLike={onLike}
+                      onDislike={onDislike}
+                      chatWidgetUri={chatWidgetUri}
+                      rentlyChatIconUri={rentlyChatIconUri}
+                    />
                   ))}
                   {isTyping && <TypingDots />}
                 </ScrollView>
@@ -259,7 +274,19 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
               {showNoNetwork && <NoNetworkBadge />}
               <AiDisclaimer showDisclaimer={showDisclaimer} />
               {showTextInput ?
-                <MessageInput onInputFocus={handleInputFocus} keyboardVisible={localKeyboardVisible} onInputHeightChange={onInputHeightChange} text={text} onTextChange={onTextChange} onSend={onSend} disabled={disabled} />
+                <MessageInput
+                  onInputFocus={handleInputFocus}
+                  keyboardVisible={localKeyboardVisible}
+                  onInputHeightChange={onInputHeightChange}
+                  text={text}
+                  onTextChange={onTextChange}
+                  onSend={onSend}
+                  disabled={disabled}
+                  responseMessage={chatMessages.length > 0 ? chatMessages[chatMessages.length - 1] : undefined}
+                  chatWidgetUri={chatWidgetUri}
+                  onLike={onLike}
+                  onDislike={onDislike}
+                />
                 :
                 (<View style={ChatWithUsModalStyles.footerContainer} >
                   <Text style={{fontSize: 14, fontWeight: '500', color: Colors.neutral[900]}} >Show previous conversation?</Text>

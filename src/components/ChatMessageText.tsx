@@ -1,5 +1,5 @@
 import { type JSX } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { Colors, Spacings } from '../tokens';
 
@@ -13,19 +13,27 @@ interface TChatMessageType {
 }
 
 interface LikeButtonProps {
-  onPress?: () => void;
+  onPress: () => void;
   status: number;
   currentStatus?: number;
   iconName: string;
   style?: ViewStyle;
 }
 
+interface ChatMessageTextProps {
+  message: TChatMessageType;
+  onLike?: (messageId: string, likeStatus: number) => void;
+  onDislike?: (messageId: string, likeStatus: number) => void;
+  chatWidgetUri?: string;
+  rentlyChatIconUri?: string;
+}
+
 const LikeButton = ({ onPress, status, currentStatus, iconName, style }: LikeButtonProps): JSX.Element => {
   const isSelected = status === currentStatus;
   const backgroundColor = isSelected
     ? status === 1
-      ? Colors.green[100]
-      : Colors.red[100]
+      ? Colors.success[100]
+      : Colors.error[100]
     : undefined;
 
   return (
@@ -33,46 +41,63 @@ const LikeButton = ({ onPress, status, currentStatus, iconName, style }: LikeBut
       style={[styles.likeButton, { backgroundColor }, style]}
       onPress={onPress}
     >
-      <Text style={styles.likeIcon}>{iconName}</Text>
+      <Text style={[styles.likeIcon, isSelected && (status === 1 ? styles.selectedLike : styles.selectedDislike)]}>
+        {iconName}
+      </Text>
     </TouchableOpacity>
   );
 };
 
-export const LiveAgentMessageText = ({ message, onLike, onDislike }: { message: TChatMessageType; onLike?: () => void; onDislike?: () => void }): JSX.Element => {
-  const { timestamp = '', content = '', senderName = 'Live Agent', likeStatus } = message;
+export const LiveAgentMessageText = ({ message, rentlyChatIconUri }: { message: TChatMessageType; rentlyChatIconUri?: string }): JSX.Element => {
+  const { timestamp = '', content = '', senderName = 'Live Agent' } = message;
   return (
     <View style={styles.aiMessageContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.senderNameWithIcon}>🤖 {senderName}</Text>
-          <Text style={styles.timestamp}>{timestamp}</Text>
-        </View>
-        <View style={styles.likeButtonsContainer}>
-          <TouchableOpacity onPress={onLike} style={styles.likeButton}>
-            <Text style={[styles.likeIcon, likeStatus === 1 && styles.selectedLike]}>👍</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onDislike} style={styles.likeButton}>
-            <Text style={[styles.likeIcon, likeStatus === -1 && styles.selectedDislike]}>👎</Text>
-          </TouchableOpacity>
+          {rentlyChatIconUri ? (
+            <Image source={{ uri: rentlyChatIconUri }} style={styles.chatWidget} />
+          ) : (
+            <Text style={styles.chatWidget}>💬</Text>
+          )}
+          <View>
+            <Text style={styles.senderName}>{senderName}</Text>
+            <Text style={styles.timestamp}>{timestamp}</Text>
+          </View>
         </View>
       </View>
-      <Text style={styles.messageContent}>{content}</Text>
+      <View>
+        <Text style={styles.messageContent}>{content}</Text>
+      </View>
     </View>
   );
 };
 
-export const AIChatMessageText = ({ message }: { message: TChatMessageType }): JSX.Element => {
-  const { timestamp = '', content = '', likeStatus = 0 } = message || {};
+export const AIChatMessageText = ({ message, onLike, onDislike, chatWidgetUri }: { message: TChatMessageType; onLike?: (messageId: string, likeStatus: number) => void; onDislike?: (messageId: string, likeStatus: number) => void; chatWidgetUri?: string }): JSX.Element => {
+  const { timestamp = '', content = '', id = '', likeStatus } = message || {};
 
-  const handleLikePress = () => {
-    // Static for now, no action
+  const handleLikePress = (newStatus: number) => {
+    const newLikeStatus = likeStatus === newStatus ? 0 : newStatus;
+    if (id && onLike) {
+      onLike(id, newLikeStatus);
+    }
+  };
+
+  const handleDislikePress = (newStatus: number) => {
+    const newLikeStatus = likeStatus === newStatus ? 0 : newStatus;
+    if (id && onDislike) {
+      onDislike(id, newLikeStatus);
+    }
   };
 
   return (
     <View style={styles.aiMessageContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.chatWidget}>💬</Text>
+          {chatWidgetUri ? (
+            <Image source={{ uri: chatWidgetUri }} style={styles.chatWidget} />
+          ) : (
+            <Text style={styles.chatWidget}>💬</Text>
+          )}
           <View>
             <Text style={styles.senderName}>RIA</Text>
             <Text style={styles.timestamp}>{timestamp}</Text>
@@ -80,14 +105,14 @@ export const AIChatMessageText = ({ message }: { message: TChatMessageType }): J
         </View>
         <View style={styles.iconContainer}>
           <LikeButton
-            onPress={() => handleLikePress()}
+            onPress={() => handleDislikePress(-1)}
             status={-1}
             currentStatus={likeStatus}
             iconName="👎"
-            style={{marginRight: Spacings.x_sm}}
+            style={styles.likeButtonGap}
           />
           <LikeButton
-            onPress={() => handleLikePress()}
+            onPress={() => handleLikePress(1)}
             status={1}
             currentStatus={likeStatus}
             iconName="👍"
@@ -111,93 +136,91 @@ export const UserChatMessageText = ({ message }: { message: TChatMessageType }):
   );
 };
 
-export const ChatMessageText = ({ message }: { message: TChatMessageType }): JSX.Element => {
+export const ChatMessageText = ({ message, onLike, onDislike, chatWidgetUri, rentlyChatIconUri }: ChatMessageTextProps): JSX.Element => {
   switch (message.user) {
     case 'AI':
-      return <AIChatMessageText message={message} />;
+      return <AIChatMessageText message={message} onLike={onLike} onDislike={onDislike} chatWidgetUri={chatWidgetUri} />;
     case 'PROSPECT':
       return <UserChatMessageText message={message} />;
     case 'LIVE_AGENT':
-      return <LiveAgentMessageText message={message} />;
+      return <LiveAgentMessageText message={message} rentlyChatIconUri={rentlyChatIconUri} />;
     default:
       return <UserChatMessageText message={message} />;
   }
 };
 
 const styles = StyleSheet.create({
-  aiMessageContainer: {
-  },
   headingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: Spacings.sm,
+    flex: 1,
   },
   subHeadingContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'center',
+    gap: Spacings.x_sm,
+    flex: 1,
   },
-  likeButtonsContainer: {
+  iconContainer: {
     flexDirection: 'row',
-  },
-  senderNameWithIcon: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: Colors.neutral[600],
-    marginRight: Spacings.x_sm,
-  },
-  timestamp: {
-    fontSize: 10,
-    color: Colors.neutral[400],
-  },
-  messageContent: {
-    fontSize: 14,
-    color: Colors.neutral[900],
+    gap: Spacings.xx_sm,
   },
   likeButton: {
-    padding: Spacings.xx_sm,
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: Colors.neutral[300],
+    transform: [{ scaleX: -1 }],
+    borderRadius: 20,
+    padding: Spacings.x_sm,
   },
-  selectedLike: {
-    backgroundColor: Colors.success[100],
-    borderColor: Colors.success[600],
-  },
-  selectedDislike: {
-    backgroundColor: Colors.error[100],
-    borderColor: Colors.error[600],
+  aiMessageContainer: {
+    marginTop: Spacings.sm,
+    marginBottom: Spacings.big,
   },
   userMessageContainer: {
     marginTop: Spacings.sm,
-    marginBottom: Spacings.lg,
+    marginBottom: Spacings.big,
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
   userBadge: {
-    backgroundColor: Colors.blue[100],
+    backgroundColor: Colors.shades[0],
     borderRadius: 20,
     paddingVertical: Spacings.sm,
     paddingHorizontal: Spacings.md,
     maxWidth: '80%',
   },
-  likeIcon: {
-    fontSize: 16,
-    color: Colors.neutral[600],
-  },
   chatWidget: {
-    fontSize: 20,
+    width: 40,
+    height: 40,
+  },
+  likeButtonGap: {
+    marginRight: Spacings.sm,
   },
   senderName: {
     fontSize: 12,
     fontWeight: '600',
     color: Colors.neutral[900],
   },
-  iconContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  timestamp: {
+    fontSize: 10,
+    color: Colors.neutral[600],
+  },
+  messageContent: {
+    fontSize: 14,
+    color: Colors.neutral[900],
+  },
+  likeIcon: {
+    fontSize: 16,
+    color: Colors.neutral[600],
+  },
+  selectedLike: {
+    color: Colors.success[600],
+  },
+  selectedDislike: {
+    color: Colors.error[600],
   },
   userMessageText: {
     fontSize: 14,
-    color: Colors.neutral[900],
+    color: Colors.shades[200],
   },
 });
