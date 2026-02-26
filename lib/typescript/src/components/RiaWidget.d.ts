@@ -41,6 +41,7 @@ interface RiaWidgetProps {
     onEndChat?: () => void;
     showEndDropdown?: boolean;
     onToggleEndDropdown?: () => void;
+    logoUri?: string;
 }
 export declare const RiaWidget: React.FC<RiaWidgetProps>;
 export {};

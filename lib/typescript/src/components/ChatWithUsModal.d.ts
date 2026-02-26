@@ -33,6 +33,7 @@ interface ChatWithUsModalProps {
     onEndChat?: () => void;
     showEndDropdown?: boolean;
     onToggleEndDropdown?: () => void;
+    logoUri?: string;
 }
 export declare const ChatWithUsModal: React.FC<ChatWithUsModalProps>;
 export {};

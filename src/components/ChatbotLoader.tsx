@@ -6,9 +6,10 @@ import { Colors, Spacings } from '../tokens';
 interface TChatbotLoaderProps {
   style?: ViewStyle;
   showChatbotLoadingMessage?: boolean;
+  logoUri?: string;
 }
 
-export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false }: TChatbotLoaderProps): JSX.Element => {
+export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false, logoUri }: TChatbotLoaderProps): JSX.Element => {
   const scaleValue = React.useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
@@ -30,18 +31,28 @@ export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false }: TCha
     );
     scaleAnimation.start();
     return () => scaleAnimation.stop();
-  }, []);
+  }, [scaleValue]);
 
   return (
     <View style={[styles.container, style]}>
-      <Animated.View
-        style={[
-          styles.logo,
-          { transform: [{ scale: scaleValue }] },
-        ]}
-      >
-        <Text style={styles.logoText}>💬</Text>
-      </Animated.View>
+      {logoUri ? (
+        <Animated.Image
+          source={{ uri: logoUri }}
+          style={[
+            styles.logo,
+            { transform: [{ scale: scaleValue }] },
+          ]}
+        />
+      ) : (
+        <Animated.View
+          style={[
+            styles.logo,
+            { transform: [{ scale: scaleValue }] },
+          ]}
+        >
+          <Text style={styles.logoText}>💬</Text>
+        </Animated.View>
+      )}
       {showChatbotLoadingMessage && (
         <View style={styles.textContainer}>
           <Text style={styles.loaderMessage}>
@@ -58,23 +69,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: Spacings.sm,
+    paddingBottom: Spacings.lg,
   },
   textContainer: {
     marginTop: Spacings.md,
-    marginHorizontal: Spacings.md,
+    marginHorizontal: Spacings.lg,
   },
   loaderMessage: {
     textAlign: 'center',
-    fontSize: 14,
-    fontWeight: '400',
-    color: Colors.neutral[900],
   },
   logo: {
     width: 32,
     height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
+    resizeMode: 'contain',
   },
   logoText: {
     fontSize: 12,

@@ -1,24 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { Colors, Spacings } from '../tokens';
 
-interface TChatWithUsModalStyles {
-    modalContainer: any;
-    backgroundContainer: any;
-    headingContainer: any;
-    contentContainer: any;
-    messageArea: any;
-    indicatorStyle: any;
-    footerContainer: any;
-    footerButtonContainer: any;
-    sideHeader: any;
-    scrollViewContent: any;
-    endChatButton: any;
-    textInput: any;
-    typingText: any;
-    accuracyText: any;
-}
-
-export const ChatWithUsModalStyles = StyleSheet.create<TChatWithUsModalStyles>({
+export const ChatWithUsModalStyles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         height: '100%',

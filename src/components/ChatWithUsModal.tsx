@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Text, BackHandler, Keyboard, Platform, Pressable} from 'react-native';
+import { ScrollView, View, TouchableOpacity, Text, BackHandler, Keyboard, Platform, Pressable} from 'react-native';
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import { AiDisclaimer } from './AiDisclaimer';
 import { LiveAgentHandoffBadge, NoNetworkBadge } from './ChatbotBadges';
@@ -45,6 +45,7 @@ interface ChatWithUsModalProps {
   onEndChat?: () => void;
   showEndDropdown?: boolean;
   onToggleEndDropdown?: () => void;
+  logoUri?: string;
 }
 
 export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
@@ -54,10 +55,10 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
   isTyping = false,
   showLoader = false,
   showNoNetwork = false,
-  showLiveAgentHandoff = false,
+  showLiveAgentHandoff: _showLiveAgentHandoff = false,
   timeExceeded = false,
   showDisclaimer = true,
-  previousChatSession,
+  previousChatSession: _previousChatSession,
   onInputFocus,
   keyboardVisible = false,
   onInputHeightChange,
@@ -74,6 +75,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
   onEndChat,
   showEndDropdown = false,
   onToggleEndDropdown,
+  logoUri,
 }) => {
   const snapPoints = ["90%"];
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -212,7 +214,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
       >
         <BottomSheetView style={ChatWithUsModalStyles.modalContainer}>
           {showLoader ? (
-            <ChatbotLoader />
+            <ChatbotLoader logoUri={logoUri} />
           ) : (
             <Pressable style={ChatWithUsModalStyles.contentContainer} onPress={() => {
               if (localShowEndDropdown) setLocalShowEndDropdown(false);
@@ -246,7 +248,6 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                     ChatWithUsModalStyles.scrollViewContent 
                   : {}}
                   onContentSizeChange={handleScrollDown}
-                  simultaneousHandlers={[]}
                 >
                   {chatMessages.map((item, index) => (
                     <ChatMessageText key={index} message={item} />
