@@ -1,12 +1,4 @@
-import React from "react";
-/**
- * RiaWidget component serves as the root entry point for chatbot-related features within the application.
- *
- * @remarks
- * This component is designed with future scalability in mind, acting as the foundational wrapper for all chatbot functionalities.
- * It currently renders the `ChatWithUsModal` component, but is intended to be extended to support additional features such as voice assistant and other interactive capabilities.
- * All future enhancements and features related to the chatbot will have their root integration within this file.
- */
+import React from 'react';
 type Message = {
     id: string;
     content: string;
@@ -14,7 +6,7 @@ type Message = {
     user: 'AI' | 'PROSPECT' | 'LIVE_AGENT';
     likeStatus?: number;
 };
-interface RiaWidgetProps {
+interface ChatWithUsModalProps {
     showModal?: boolean;
     onClose?: () => void;
     chatMessages?: Message[];
@@ -42,6 +34,6 @@ interface RiaWidgetProps {
     showEndDropdown?: boolean;
     onToggleEndDropdown?: () => void;
 }
-export declare const RiaWidget: React.FC<RiaWidgetProps>;
+export declare const ChatWithUsModal: React.FC<ChatWithUsModalProps>;
 export {};
-//# sourceMappingURL=RiaWidget.d.ts.map
+//# sourceMappingURL=ChatWithUsModal.d.ts.map

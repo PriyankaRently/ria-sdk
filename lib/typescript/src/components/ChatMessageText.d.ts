@@ -7,8 +7,10 @@ interface TChatMessageType {
     senderName?: string;
     likeStatus?: number;
 }
-export declare const LiveAgentMessageText: ({ message }: {
+export declare const LiveAgentMessageText: ({ message, onLike, onDislike }: {
     message: TChatMessageType;
+    onLike?: () => void;
+    onDislike?: () => void;
 }) => JSX.Element;
 export declare const AIChatMessageText: ({ message }: {
     message: TChatMessageType;

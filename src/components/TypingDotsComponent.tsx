@@ -62,6 +62,7 @@ export const TypingDots = ({
               transform: [{ scale: scale1 }],
               opacity: interpolateOpacity(scale1),
               backgroundColor: interpolateColor(scale1),
+              marginRight: Spacings.xx_sm,
             },
           ]}
         />
@@ -72,6 +73,7 @@ export const TypingDots = ({
               transform: [{ scale: scale2 }],
               opacity: interpolateOpacity(scale2),
               backgroundColor: interpolateColor(scale2),
+              marginRight: Spacings.xx_sm,
             },
           ]}
         />
@@ -108,7 +110,6 @@ const styles = StyleSheet.create({
   typingIndicatorDots: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: Spacings.xx_sm, // Use Spacings for gap between dots
   },
   dot: {
     width: 4,

@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     margin: 2,
-    gap: Spacings.x_sm,
   },
   text: {
     color: Colors.neutral[100],

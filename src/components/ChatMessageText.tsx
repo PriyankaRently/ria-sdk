@@ -2,7 +2,6 @@ import { type JSX } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { Colors, Spacings } from '../tokens';
-import { Fonts } from '../assets/fonts';
 
 interface TChatMessageType {
   id?: string;
@@ -85,7 +84,7 @@ export const AIChatMessageText = ({ message }: { message: TChatMessageType }): J
             status={-1}
             currentStatus={likeStatus}
             iconName="👎"
-            style={styles.likeButtonGap}
+            style={{marginRight: Spacings.x_sm}}
           />
           <LikeButton
             onPress={() => handleLikePress()}
@@ -127,7 +126,6 @@ export const ChatMessageText = ({ message }: { message: TChatMessageType }): JSX
 
 const styles = StyleSheet.create({
   aiMessageContainer: {
-    gap: Spacings.sm,
   },
   headingContainer: {
     flexDirection: 'row',
@@ -137,16 +135,15 @@ const styles = StyleSheet.create({
   subHeadingContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    gap: Spacings.x_sm,
   },
   likeButtonsContainer: {
     flexDirection: 'row',
-    gap: Spacings.x_sm,
   },
   senderNameWithIcon: {
     fontSize: 12,
     fontWeight: '500',
     color: Colors.neutral[600],
+    marginRight: Spacings.x_sm,
   },
   timestamp: {
     fontSize: 10,
@@ -198,8 +195,9 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: Spacings.sm,
   },
-  likeButtonGap: {
-    marginRight: Spacings.sm,
+  userMessageText: {
+    fontSize: 14,
+    color: Colors.neutral[900],
   },
+});

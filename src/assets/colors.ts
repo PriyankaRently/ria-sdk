@@ -1,6 +1,7 @@
 // Colors from RenterApp
 export const Colors = {
   neutral: {
+    50: '#F9FAFB',
     100: '#F3F4F6',
     200: '#E5E7EB',
     300: '#D1D5DB',
@@ -14,7 +15,8 @@ export const Colors = {
   shades: {
     0: '#000000',
     100: '#F9FAFB',
-    200: '#F3F4F6',
+    200: '#FFFFFF',
+    transparent: 'transparent',
   },
   red: {
     100: '#FEF2F2',
@@ -137,5 +139,15 @@ export const Colors = {
     700: '#991B1B',
     800: '#7F1D1D',
     900: '#450A0A',
+  },
+  tertiary: {
+    600: '#7C3AED',
+  },
+  chatBot: {
+    100: '#F1F8FF',
+    200: '#E0F2FE',
+  },
+  backgroundOverlays: {
+    601: '#4B5563',
   },
 };

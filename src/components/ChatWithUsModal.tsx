@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Text, BackHandler, Keyboard, Platform, Pressable, ViewStyle } from 'react-native';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Text, BackHandler, Keyboard, Platform, Pressable} from 'react-native';
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from "@gorhom/bottom-sheet";
 import { AiDisclaimer } from './AiDisclaimer';
 import { LiveAgentHandoffBadge, NoNetworkBadge } from './ChatbotBadges';
@@ -189,13 +189,25 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
         enableOverDrag={false}
         enablePanDownToClose={true}
         handleIndicatorStyle={[ChatWithUsModalStyles.indicatorStyle, Platform.OS === "ios" ? { marginTop: Spacings.xx_big } : null]}
-        backgroundComponent={({ style }: { style: ViewStyle }) => (
-          <View
-            style={[
-              style,
-              ChatWithUsModalStyles.backgroundContainer
-            ]}
-          />
+        backgroundComponent={({ style }) => (
+          Platform.OS === "ios" ? (
+            <View
+              style={[
+                style,
+                {
+                  flex: 1,
+                  backgroundColor: Colors.chatBot[200],
+                }
+              ]}
+            />
+          ) : (
+            <View
+              style={[
+                style,
+                ChatWithUsModalStyles.backgroundContainer
+              ]}
+            />
+          )
         )}
       >
         <BottomSheetView style={ChatWithUsModalStyles.modalContainer}>
@@ -211,13 +223,13 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                   {isLiveAgentConnected && <Text style={{fontSize: 10, fontWeight: '500', color: Colors.neutral[600]}} >🟢 Connected to live agent</Text>}
                 </View>
                 <View style={ChatWithUsModalStyles.sideHeader}>
-                  {isLiveAgentHandoff && (<TouchableOpacity onPress={handleToggleEndDropdown}>
-                    <View style={{backgroundColor: Colors.neutral[600], borderColor: Colors.neutral[300], paddingHorizontal: Spacings.md, paddingVertical: 6, borderWidth: 1, borderRadius: 12}} >
-                      <Text style={{color: Colors.neutral[100], fontSize: 12, fontWeight: '500'}} >End</Text>
+                  {isLiveAgentHandoff && (<TouchableOpacity onPress={handleToggleEndDropdown} style={{marginRight: Spacings.sm}}>
+                    <View style={{backgroundColor: Colors.backgroundOverlays[601], borderColor: Colors.neutral[300], paddingHorizontal: Spacings.md, paddingVertical: 6, borderWidth: 1, borderRadius: 12}} >
+                      <Text style={{color: Colors.shades[200], fontSize: 12, fontWeight: '500'}} >End</Text>
                     </View>
                   </TouchableOpacity>)}
                   <TouchableOpacity onPress={onClose}>
-                    <Text style={{fontSize: 24, color: Colors.neutral[700]}} >-</Text>
+                    <Text style={{fontSize: 24, color: Colors.neutral[700]}} >−</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -225,9 +237,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                 style={[ChatWithUsModalStyles.endChatButton, { display: localShowEndDropdown && isLiveAgentHandoff ? "flex" : "none" }]}
                 onPress={handleEndChat}
               >
-                <View style={{backgroundColor: Colors.neutral[100], paddingHorizontal: Spacings.sm, paddingVertical: Spacings.x_sm, borderRadius: 8}} >
-                  <Text style={{color: Colors.neutral[900], fontSize: 12, fontWeight: '500'}} >Leave conversation</Text>
-                </View>
+                <Text style={{color: Colors.shades[200], fontSize: 12, fontWeight: '500'}} >Leave conversation</Text>
               </TouchableOpacity>
               <View style={ChatWithUsModalStyles.messageArea}>
                 <ScrollView ref={scrollViewRef}
@@ -236,6 +246,7 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
                     ChatWithUsModalStyles.scrollViewContent 
                   : {}}
                   onContentSizeChange={handleScrollDown}
+                  simultaneousHandlers={[]}
                 >
                   {chatMessages.map((item, index) => (
                     <ChatMessageText key={index} message={item} />
@@ -245,13 +256,13 @@ export const ChatWithUsModal: React.FC<ChatWithUsModalProps> = ({
               </View>
               {isLiveAgentHandoff && !isLiveAgentConnected && <LiveAgentHandoffBadge timeExceeded={timeExceeded} />}
               {showNoNetwork && <NoNetworkBadge />}
-              <AiDisclaimer showDisclaimer={showDisclaimer} previousChatSession={previousChatSession} chatMessages={chatMessages} />
+              <AiDisclaimer showDisclaimer={showDisclaimer} />
               {showTextInput ?
                 <MessageInput onInputFocus={handleInputFocus} keyboardVisible={localKeyboardVisible} onInputHeightChange={onInputHeightChange} text={text} onTextChange={onTextChange} onSend={onSend} disabled={disabled} />
                 :
                 (<View style={ChatWithUsModalStyles.footerContainer} >
                   <Text style={{fontSize: 14, fontWeight: '500', color: Colors.neutral[900]}} >Show previous conversation?</Text>
-                  <View style={[ChatWithUsModalStyles.footerButtonContainer, {flexDirection: 'row'}]} >
+                  <View style={ChatWithUsModalStyles.footerButtonContainer} >
                     <TouchableOpacity style={{backgroundColor: Colors.neutral[100], padding: Spacings.sm, borderRadius: 8, alignItems: 'center', flex: 1, marginRight: Spacings.sm}} onPress={onPressNotContinueChat} disabled={isOffline} >
                       <Text style={{color: Colors.neutral[900], fontSize: 14, fontWeight: '500'}} >No</Text>
                     </TouchableOpacity>
