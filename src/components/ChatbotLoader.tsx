@@ -40,7 +40,7 @@ export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false }: TCha
           { transform: [{ scale: scaleValue }] },
         ]}
       >
-        <Text style={styles.logoText}>Loading</Text>
+        <Text style={styles.logoText}>💬</Text>
       </Animated.View>
       {showChatbotLoadingMessage && (
         <View style={styles.textContainer}>
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '400',
-    color: Colors.gray[700],
+    color: Colors.neutral[900],
   },
   logo: {
     width: 32,

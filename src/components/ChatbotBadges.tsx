@@ -38,6 +38,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 14,
-        color: Colors.white,
+        color: Colors.neutral[50],
     },
 });

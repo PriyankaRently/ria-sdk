@@ -39,22 +39,25 @@ const LikeButton = ({ onPress, status, currentStatus, iconName, style }: LikeBut
   );
 };
 
-export const LiveAgentMessageText = ({ message }: { message: TChatMessageType }): JSX.Element => {
-  const { timestamp = '', content = '', senderName = 'Live Agent' } = message;
+export const LiveAgentMessageText = ({ message, onLike, onDislike }: { message: TChatMessageType; onLike?: () => void; onDislike?: () => void }): JSX.Element => {
+  const { timestamp = '', content = '', senderName = 'Live Agent', likeStatus } = message;
   return (
     <View style={styles.aiMessageContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
-          <Text style={styles.chatWidget}>🤖</Text>
-          <View>
-            <Text style={styles.senderName}>{senderName}</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
-          </View>
+          <Text style={styles.senderNameWithIcon}>🤖 {senderName}</Text>
+          <Text style={styles.timestamp}>{timestamp}</Text>
+        </View>
+        <View style={styles.likeButtonsContainer}>
+          <TouchableOpacity onPress={onLike} style={styles.likeButton}>
+            <Text style={[styles.likeIcon, likeStatus === 1 && styles.selectedLike]}>👍</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onDislike} style={styles.likeButton}>
+            <Text style={[styles.likeIcon, likeStatus === -1 && styles.selectedDislike]}>👎</Text>
+          </TouchableOpacity>
         </View>
       </View>
-      <View>
-        <Text style={styles.messageContent}>{content}</Text>
-      </View>
+      <Text style={styles.messageContent}>{content}</Text>
     </View>
   );
 };
@@ -123,31 +126,49 @@ export const ChatMessageText = ({ message }: { message: TChatMessageType }): JSX
 };
 
 const styles = StyleSheet.create({
+  aiMessageContainer: {
+    gap: Spacings.sm,
+  },
   headingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Spacings.sm,
-    flex: 1,
   },
   subHeadingContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacings.sm,
-    flex: 1,
+    alignItems: 'baseline',
+    gap: Spacings.x_sm,
   },
-  iconContainer: {
+  likeButtonsContainer: {
     flexDirection: 'row',
-    gap: Spacings.xx_sm,
+    gap: Spacings.x_sm,
+  },
+  senderNameWithIcon: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: Colors.neutral[600],
+  },
+  timestamp: {
+    fontSize: 10,
+    color: Colors.neutral[400],
+  },
+  messageContent: {
+    fontSize: 14,
+    color: Colors.neutral[900],
   },
   likeButton: {
-    transform: [{ scaleX: -1 }],
-    borderRadius: 20,
-    padding: Spacings.sm,
+    padding: Spacings.xx_sm,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: Colors.neutral[300],
   },
-  aiMessageContainer: {
-    marginTop: Spacings.sm,
-    marginBottom: Spacings.lg,
+  selectedLike: {
+    backgroundColor: Colors.success[100],
+    borderColor: Colors.success[600],
+  },
+  selectedDislike: {
+    backgroundColor: Colors.error[100],
+    borderColor: Colors.error[600],
   },
   userMessageContainer: {
     marginTop: Spacings.sm,
@@ -155,26 +176,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  chatWidget: {
-    fontSize: 24,
-  },
-  senderName: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: Colors.gray[800],
-    fontFamily: Fonts.primary.medium,
-  },
-  timestamp: {
-    fontSize: 12,
-    color: Colors.neutral[600],
-  },
-  messageContent: {
-    fontSize: 14,
-    color: Colors.gray[700],
-    fontFamily: Fonts.primary.regular,
-  },
   userBadge: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.blue[100],
     borderRadius: 20,
     paddingVertical: Spacings.sm,
     paddingHorizontal: Spacings.md,
@@ -185,11 +188,5 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: Colors.gray[900],
     fontFamily: Fonts.primary.regular,
-  },
-  likeIcon: {
-    fontSize: 16,
-  },
-  likeButtonGap: {
-    marginRight: Spacings.sm,
   },
 });

@@ -101,8 +101,9 @@ const styles = StyleSheet.create({
   typingIndicatorAnimated: {
     display: 'flex',
     alignItems: 'baseline',
-    marginLeft: Spacings.x_sm,
-    marginRight: Spacings.xx_sm, // Use Spacings for margin between text and dots
+    fontSize: 12,
+    fontWeight: '500',
+    color: Colors.neutral[600],
   },
   typingIndicatorDots: {
     flexDirection: 'row',
@@ -110,10 +111,10 @@ const styles = StyleSheet.create({
     gap: Spacings.xx_sm, // Use Spacings for gap between dots
   },
   dot: {
-    width: 2,
-    height: 2,
+    width: 4,
+    height: 4,
     backgroundColor: Colors.neutral[600],
-    borderRadius: 9999,
+    borderRadius: 2,
     opacity: 0.4,
   },
 });

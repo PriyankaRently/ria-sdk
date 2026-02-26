@@ -1,6 +1,7 @@
 import { type JSX } from "react";
 import { Linking, View, StyleSheet, Text } from "react-native"
 import type { TextStyle, ViewStyle } from 'react-native';
+import { Colors, Spacings } from '../tokens';
 
 interface AiDisclaimerProps {
     showDisclaimer?: boolean;
@@ -45,17 +46,17 @@ interface TAiDisclaimerStyles {
 
 const styles = StyleSheet.create<TAiDisclaimerStyles>({
     container: {
-        marginHorizontal: 4,
-        marginTop: 8,
+        marginHorizontal: Spacings.x_sm,
+        marginTop: Spacings.sm,
     },
     disclaimerText: {
         fontSize: 12,
         fontWeight: '400',
-        color: '#6B7280',
+        color: Colors.neutral[500],
     },
     linkText: {
         fontSize: 12,
         fontWeight: '400',
-        color: '#7C3AED',
+        color: Colors.tertiary[600],
     },
 })

@@ -1,50 +1,57 @@
-import { StyleSheet } from 'react-native';
-import type { ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+import { Colors, Spacings } from '../tokens';
 
-interface TChatWithUsModalStyles {
-    overlay: ViewStyle;
-    modal: ViewStyle;
-    header: ViewStyle;
-    title: TextStyle;
-    closeButton: ViewStyle;
-    closeText: TextStyle;
-    content: ViewStyle;
-    [key: string]: ViewStyle | TextStyle;
-}
-
-export const styles = StyleSheet.create<TChatWithUsModalStyles>({
-    overlay: {
+export const ChatWithUsModalStyles = StyleSheet.create({
+    indicatorStyle: {
+        backgroundColor: Colors.neutral[400],
+        width: 32,
+        height: 4,
+    },
+    backgroundContainer: {
+        backgroundColor: Colors.neutral[100], // Approximate chat-bot[100]
+    },
+    modalContainer: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
+        paddingHorizontal: Spacings.md,
+        paddingTop: Platform.OS === "ios" ? Spacings.sm : Spacings.md,
     },
-    modal: {
-        backgroundColor: '#FFFFFF',
-        borderRadius: 10,
-        width: '90%',
-        maxHeight: '80%',
-        padding: 20,
+    contentContainer: {
+        flex: 1,
     },
-    header: {
+    headingContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: Spacings.sm,
     },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: '#000000',
+    sideHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: Spacings.sm,
     },
-    closeButton: {
-        padding: 5,
+    endChatButton: {
+        position: 'absolute',
+        top: 50,
+        right: Spacings.md,
+        zIndex: 1,
     },
-    closeText: {
-        fontSize: 18,
-        color: '#007AFF',
-    },
-    content: {
+    messageArea: {
         flex: 1,
+        marginBottom: Spacings.sm,
+    },
+    scrollViewContent: {
+        paddingBottom: 20,
+    },
+    footerContainer: {
+        gap: Spacings.sm,
+        alignItems: 'center',
+    },
+    footerButtonContainer: {
+        width: '100%',
+    },
+    accuracyText: {
+        textAlign: 'center',
+        color: Colors.neutral[500],
+        marginTop: Spacings.x_sm,
     },
 });

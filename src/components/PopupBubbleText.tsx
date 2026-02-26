@@ -15,7 +15,7 @@ export const PopupBubbleText = ({ text, style = {} }: TPopupBubbleTextProps): JS
   return (
     <View style={[styles.container, style]}>
       <LinearGradient
-        colors={['#5F9EF8', '#B993F7']}
+        colors={[Colors.primary[600], Colors.secondary[600]]}
         start={{ x: 0.01, y: 0 }}
         end={{ x: 0.99, y: 0 }}
         angle={89.42}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   textContainer: {
-    backgroundColor: Colors.shades[200],
+    backgroundColor: Colors.neutral[900],
     paddingHorizontal: Spacings.md,
     paddingVertical: Spacings.x_sm,
     borderRadius: 80,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     gap: Spacings.x_sm,
   },
   text: {
-    color: Colors.shades[0],
+    color: Colors.neutral[50],
     fontSize: 12,
     fontWeight: '500',
   },

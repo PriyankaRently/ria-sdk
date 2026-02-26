@@ -1,7 +1,6 @@
 import React, { type JSX } from 'react';
-import { Keyboard, StyleSheet, TextInput, TouchableOpacity, View, Text } from 'react-native';
-import { Platform } from 'react-native';
-import { Colors } from '../tokens';
+import { Keyboard, StyleSheet, TextInput, TouchableOpacity, View, Text, Platform } from 'react-native';
+import { Colors, Spacings } from '../tokens';
 
 interface TMessageInputProps {
   onInputFocus?: () => void;
@@ -37,7 +36,7 @@ export const MessageInput = ({
     onSend?.();
   };
 
-  const sendBackgroundColor = !disabled ? Colors.blue[500] : Colors.neutral[300];
+  const sendBackgroundColor = !disabled ? Colors.secondary[600] : Colors.neutral[300];
 
   return (
     <View
@@ -53,7 +52,7 @@ export const MessageInput = ({
       <TextInput
         style={styles.textInput}
         placeholder="Start a search or ask a question..."
-        placeholderTextColor={Colors.gray[400]}
+        placeholderTextColor={Colors.neutral[400]}
         onChangeText={onTextChange}
         value={text}
         multiline={true}
@@ -90,9 +89,9 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderColor: Colors.neutral[300],
     borderWidth: 1,
-    borderRadius: 24,
+    borderRadius: Spacings.big,
     paddingHorizontal: 10,
-    marginTop: 8,
+    marginTop: Spacings.sm,
     backgroundColor: Colors.white,
     paddingVertical: Platform.OS === 'ios' ? 12 : 8,
   },
@@ -114,9 +113,9 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     fontSize: 14,
-    marginRight: 12,
-    marginLeft: 4,
-    color: Colors.gray[800],
+    marginRight: Spacings.md,
+    marginLeft: Spacings.xx_sm,
+    color: Colors.neutral[900],
     minHeight: 40,
     maxHeight: 100,
   },
