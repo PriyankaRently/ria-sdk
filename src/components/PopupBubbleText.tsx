@@ -1,58 +1,92 @@
-import { type JSX } from 'react';
-import { View, StyleSheet, Text, type ViewStyle } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { Colors, Spacings } from '../tokens';
+import React from 'react';
+import { View, type ViewStyle, StyleSheet, Animated } from 'react-native';
+import { SDKText } from './ui';
+import { RDColors, Spacings } from '../assets';
 
-interface TPopupBubbleTextProps {
+interface PopupBubbleTextProps {
   text: string;
+  visible?: boolean;
   style?: ViewStyle;
 }
-/**
- * PopupBubbleText component for displaying a pop up bubble with text.
- * Uses a linear gradient background for the bubble border.
- */
-export const PopupBubbleText = ({ text, style = {} }: TPopupBubbleTextProps): JSX.Element => {
+
+export const PopupBubbleText = ({ text, visible = true, style }: PopupBubbleTextProps) => {
+  const opacity = React.useRef(new Animated.Value(0)).current;
+  const translateY = React.useRef(new Animated.Value(10)).current;
+
+  React.useEffect(() => {
+    if (visible) {
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 10,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [visible, opacity, translateY]);
+
+  if (!visible) return null;
+
   return (
-    <View style={[styles.container, style]}>
-      <LinearGradient
-        colors={[Colors.primary[600], Colors.secondary[600]]}
-        start={{ x: 0.01, y: 0 }}
-        end={{ x: 0.99, y: 0 }}
-        angle={89.42}
-        style={styles.gradientBorder}
-      >
-        <View style={styles.textContainer}>
-          <Text style={styles.text}>{text}</Text>
-        </View>
-      </LinearGradient>
-    </View>
+    <Animated.View
+      style={[
+        styles.container,
+        style,
+        {
+          opacity,
+          transform: [{ translateY }],
+        },
+      ]}
+    >
+      <SDKText variant="Small" weight="Medium" color={RDColors.shades[0]}>
+        {text}
+      </SDKText>
+      <View style={styles.arrow} />
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 1,
-    alignSelf: 'flex-start',
-  },
-  gradientBorder: {
-    borderRadius: 80,
-    opacity: 1,
-    alignSelf: 'flex-start',
-    overflow: 'hidden',
-  },
-  textContainer: {
-    backgroundColor: Colors.neutral[900],
+    position: 'absolute',
+    bottom: 80,
+    right: 20,
+    backgroundColor: RDColors.secondary[600],
+    paddingVertical: Spacings.sm,
     paddingHorizontal: Spacings.md,
-    paddingVertical: Spacings.x_sm,
-    borderRadius: 80,
-    alignSelf: "center",
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 2,
+    borderRadius: 12,
+    maxWidth: 200,
+    shadowColor: RDColors.neutral[500],
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  text: {
-    color: Colors.neutral[100],
-    fontSize: 12,
-    fontWeight: '500',
+  arrow: {
+    position: 'absolute',
+    bottom: -6,
+    right: 20,
+    width: 12,
+    height: 12,
+    backgroundColor: RDColors.secondary[600],
+    transform: [{ rotate: '45deg' }],
   },
 });

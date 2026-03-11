@@ -14,6 +14,7 @@ export function multiply(a: number, b: number): number {
   return RiaSdk.multiply(a, b);
 }
 
+// Export components
 export {
   AiDisclaimer,
   LiveAgentHandoffBadge,
@@ -27,3 +28,26 @@ export {
   RiaWidget,
   ChatWithUsModal,
 };
+
+// Export context and hooks
+export { RiaChatBotProvider, useRiaChatBot } from './context';
+export {
+  useChatbotContext,
+  useChatMessages,
+  useLiveAgent,
+  useLiveKitRoom,
+  useReconnectionToChatbot,
+} from './hooks';
+
+// Export types
+export type {
+  TChatMessageType,
+  TPreviousChatSessionType,
+  TPreviousChatMessageType,
+  TLiveAgentHandoffDetailsType,
+  RiaChatBotState,
+  RiaChatBotConfig,
+} from './types';
+
+// Export services
+export { ApiService } from './services';

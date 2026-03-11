@@ -1,1 +1,1 @@
-{"version":3,"names":["Colors","Fonts","Spacings"],"sourceRoot":"../../src","sources":["tokens.ts"],"mappings":";;AACA,SAASA,MAAM,QAAQ,oBAAiB;AACxC,SAASC,KAAK,QAAQ,mBAAgB;AACtC,SAASC,QAAQ,QAAQ,sBAAmB","ignoreList":[]}
+{"version":3,"names":["RDColors","Fonts","Spacings"],"sourceRoot":"../../src","sources":["tokens.ts"],"mappings":";;AACA,SAASA,QAAQ,QAAQ,oBAAiB;AAC1C,SAASC,KAAK,QAAQ,mBAAgB;AACtC,SAASC,QAAQ,QAAQ,sBAAmB","ignoreList":[]}

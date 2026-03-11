@@ -1,13 +1,9 @@
-import { type JSX } from 'react';
 import { type ViewStyle } from 'react-native';
-interface TPopupBubbleTextProps {
+interface PopupBubbleTextProps {
     text: string;
+    visible?: boolean;
     style?: ViewStyle;
 }
-/**
- * PopupBubbleText component for displaying a pop up bubble with text.
- * Uses a linear gradient background for the bubble border.
- */
-export declare const PopupBubbleText: ({ text, style }: TPopupBubbleTextProps) => JSX.Element;
+export declare const PopupBubbleText: ({ text, visible, style }: PopupBubbleTextProps) => import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=PopupBubbleText.d.ts.map

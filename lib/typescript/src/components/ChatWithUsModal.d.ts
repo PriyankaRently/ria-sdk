@@ -1,44 +1,37 @@
-import React from 'react';
-type Message = {
-    id: string;
-    content: string;
-    timestamp: string;
-    user: 'AI' | 'PROSPECT' | 'LIVE_AGENT';
-    likeStatus?: number;
-};
-interface ChatWithUsModalProps {
-    showModal?: boolean;
-    onClose?: () => void;
-    chatMessages?: Message[];
-    isTyping?: boolean;
-    showLoader?: boolean;
-    showNoNetwork?: boolean;
-    showLiveAgentHandoff?: boolean;
-    timeExceeded?: boolean;
-    showDisclaimer?: boolean;
-    previousChatSession?: any;
-    onInputFocus?: () => void;
-    keyboardVisible?: boolean;
-    onInputHeightChange?: () => void;
-    onSend?: () => void;
-    disabled?: boolean;
-    text?: string;
-    onTextChange?: (text: string) => void;
-    showTextInput?: boolean;
-    onPressNotContinueChat?: () => void;
-    onPressYesContinueChat?: () => void;
-    isOffline?: boolean;
-    isLiveAgentConnected?: boolean;
-    isLiveAgentHandoff?: boolean;
+import { type JSX } from 'react';
+interface ChatWithUsModalCallbacks {
+    onModalOpened?: (params: {
+        screenName: string;
+        prospectId?: string;
+    }) => void;
+    onModalClosed?: (params: {
+        screenName: string;
+    }) => void;
+    onSendMessage?: (params: {
+        message: string;
+        chatSessionId: string | null;
+        isLiveAgentConnected: boolean;
+    }) => void;
+    onSendMessageFailed?: (params: {
+        error: string;
+        chatSessionId: string | null;
+    }) => void;
+    onLikePress?: (params: {
+        messageId: string;
+        likeStatus: number;
+    }) => void;
     onEndChat?: () => void;
-    showEndDropdown?: boolean;
-    onToggleEndDropdown?: () => void;
-    logoUri?: string;
-    onLike?: (messageId: string, likeStatus: number) => void;
-    onDislike?: (messageId: string, likeStatus: number) => void;
-    chatWidgetUri?: string;
-    rentlyChatIconUri?: string;
 }
-export declare const ChatWithUsModal: React.FC<ChatWithUsModalProps>;
+interface ChatWithUsModalProps extends ChatWithUsModalCallbacks {
+    prospectId?: string;
+    isOffline?: boolean;
+}
+/**
+ * ChatWithUsModal renders a chat modal for users to interact with RIA chatbot or a live agent.
+ * Features include message display, agent handoff, LiveKit integration, and conversation controls.
+ *
+ * @returns {JSX.Element} Chat modal component.
+ */
+export declare const ChatWithUsModal: ({ prospectId, isOffline, onModalOpened, onModalClosed, onSendMessage, onSendMessageFailed, onLikePress, onEndChat: onEndChatCallback, }?: ChatWithUsModalProps) => JSX.Element;
 export {};
 //# sourceMappingURL=ChatWithUsModal.d.ts.map

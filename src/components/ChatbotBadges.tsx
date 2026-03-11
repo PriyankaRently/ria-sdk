@@ -1,43 +1,57 @@
-import { type JSX } from "react";
-import { View, StyleSheet, Text } from "react-native"
-import { Colors, Spacings } from '../tokens';
 
-interface TChatbotBadgeProps {
-    timeExceeded: boolean;
+import { View, type ViewStyle, StyleSheet, Image } from 'react-native';
+import { SDKText } from './ui';
+import { RDColors, Spacings } from '../assets';
+
+interface LiveAgentHandoffBadgeProps {
+  timeExceeded?: boolean;
+  style?: ViewStyle;
 }
 
-export const LiveAgentHandoffBadge = ({ timeExceeded }: TChatbotBadgeProps): JSX.Element => {
-    const message = timeExceeded
-        ? "Due to higher than usual wait times, the next available representative will contact you directly from the following number: 1 (888) 340-6340"
-        : "Hang tight! We're connecting you to someone now—this may take up to 5 minutes.";
-    return (
-        <View style={styles.badge}>
-            <Text style={styles.text}>
-                {message}
-            </Text>
-        </View>
-    )
+export const LiveAgentHandoffBadge = ({ timeExceeded: _timeExceeded, style }: LiveAgentHandoffBadgeProps) => {
+  return (
+    <View style={[styles.container, style]}>
+      <Image
+        source={require('../assets/icons/rentlyChatIcon.png')}
+        style={styles.icon}
+        resizeMode="contain"
+      />
+      <SDKText variant="Small" weight="Medium">
+        Connecting to a live agent...
+      </SDKText>
+    </View>
+  );
+};
+
+interface NoNetworkBadgeProps {
+  style?: ViewStyle;
 }
 
-export const NoNetworkBadge = (): JSX.Element => {
-    return (
-        <View style={styles.badge}>
-            <Text style={styles.text}>
-                No network connection available.
-            </Text>
-        </View>
-    )
-}
+export const NoNetworkBadge = ({ style }: NoNetworkBadgeProps) => {
+  return (
+    <View style={[styles.container, styles.errorContainer, style]}>
+      <SDKText variant="Small" weight="Medium" color={RDColors.neutral[700]}>
+        No Internet Connection
+      </SDKText>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    badge: {
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        borderRadius: 8,
-        padding: Spacings.sm,
-        marginVertical: Spacings.xx_sm,
-    },
-    text: {
-        fontSize: 14,
-        color: Colors.neutral[100],
-    },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacings.md,
+    paddingVertical: Spacings.sm,
+    backgroundColor: RDColors['background-overlays'][600],
+    borderRadius: 20,
+    gap: Spacings.x_sm,
+  },
+  errorContainer: {
+    backgroundColor: RDColors.neutral[100],
+  },
+  icon: {
+    width: 24,
+    height: 24,
+  },
 });

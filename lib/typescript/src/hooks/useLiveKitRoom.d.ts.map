@@ -1,0 +1,1 @@
+{"version":3,"file":"useLiveKitRoom.d.ts","sourceRoot":"","sources":["../../../../src/hooks/useLiveKitRoom.ts"],"names":[],"mappings":"AAWA,UAAU,mBAAmB;IAC3B,gBAAgB,CAAC,EAAE,CAAC,SAAS,EAAE,MAAM,EAAE,UAAU,CAAC,EAAE,GAAG,KAAK,IAAI,CAAC;IACjE,yBAAyB,CAAC,EAAE,CAAC,IAAI,EAAE,MAAM,KAAK,IAAI,CAAC;CACpD;AAED;;;GAGG;AACH,eAAO,MAAM,cAAc,GAAI,mDAG5B,mBAAwB;;;;CAkL1B,CAAC"}

@@ -1,16 +1,17 @@
-import React, { type JSX } from 'react';
-import { View, StyleSheet, Animated, Easing, Text } from 'react-native';
-import type { ViewStyle } from 'react-native';
-import { Colors, Spacings } from '../tokens';
+import React from 'react';
+import { View, StyleSheet, Animated, Easing, type ViewStyle } from 'react-native';
+import { SDKText } from './ui';
+import { Spacings } from '../assets';
+import { useRiaChatBot } from '../context';
 
 interface TChatbotLoaderProps {
   style?: ViewStyle;
-  showChatbotLoadingMessage?: boolean;
-  logoUri?: string;
 }
 
-export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false, logoUri }: TChatbotLoaderProps): JSX.Element => {
+export const ChatbotLoader = ({ style }: TChatbotLoaderProps) => {
   const scaleValue = React.useRef(new Animated.Value(1)).current;
+  const { state } = useRiaChatBot();
+  const { showChatbotLoadingMessage } = state;
 
   React.useEffect(() => {
     const scaleAnimation = Animated.loop(
@@ -29,36 +30,25 @@ export const ChatbotLoader = ({ style, showChatbotLoadingMessage = false, logoUr
         }),
       ])
     );
+
     scaleAnimation.start();
-    return () => scaleAnimation.stop();
+
+    return () => {
+      scaleAnimation.stop();
+    };
   }, [scaleValue]);
 
   return (
     <View style={[styles.container, style]}>
-      {logoUri ? (
-        <Animated.Image
-          source={{ uri: logoUri }}
-          style={[
-            styles.logo,
-            { transform: [{ scale: scaleValue }] },
-          ]}
-        />
-      ) : (
-        <Animated.View
-          style={[
-            styles.logo,
-            { transform: [{ scale: scaleValue }] },
-          ]}
-        >
-          <Text style={styles.logoText}>💬</Text>
-        </Animated.View>
-      )}
+      <Animated.Image
+        source={require('../assets/icons/rentlyChatIcon.png')}
+        style={[styles.image, { transform: [{ scale: scaleValue }] }]}
+        resizeMode="contain"
+      />
       {showChatbotLoadingMessage && (
-        <View style={styles.textContainer}>
-          <Text style={styles.loaderMessage}>
-            We're having issues connecting to our servers. Try closing the app and starting a new conversation.
-          </Text>
-        </View>
+        <SDKText variant="Small" weight="Regular" style={styles.text}>
+          Loading...
+        </SDKText>
       )}
     </View>
   );
@@ -69,22 +59,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: Spacings.lg,
+    gap: Spacings.sm,
   },
-  textContainer: {
-    marginTop: Spacings.md,
-    marginHorizontal: Spacings.lg,
+  image: {
+    width: 80,
+    height: 80,
   },
-  loaderMessage: {
-    textAlign: 'center',
-  },
-  logo: {
-    width: 32,
-    height: 48,
-    resizeMode: 'contain',
-  },
-  logoText: {
-    fontSize: 12,
-    color: Colors.neutral[600],
+  text: {
+    marginTop: Spacings.sm,
   },
 });

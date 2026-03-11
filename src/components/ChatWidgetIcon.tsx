@@ -1,8 +1,5 @@
-import React, { type JSX } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
-import type { ViewStyle, ImageStyle, TextStyle } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { PopupBubbleText } from './PopupBubbleText';
+import { useState, useEffect, type JSX } from 'react';
+import { Image, StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -12,27 +9,41 @@ import Animated, {
   Extrapolate,
   Easing,
 } from 'react-native-reanimated';
+import LinearGradient from 'react-native-linear-gradient';
+import { SDKPressable } from './ui';
+import { PopupBubbleText } from './PopupBubbleText';
+import { useRiaChatBot } from '../context/RiaChatBotContext';
 
-interface TChatWidgetIconProps {
+interface ChatWidgetIconProps {
   bottom?: number;
   right?: number;
+  screenName: string;
   enableShineAnimation?: boolean;
-  onPress?: () => void;
-  iconUri?: string;
+  iconUri?: string | ImageSourcePropType;
+  onPress?: (screenName: string) => void;
 }
 
 export const ChatWidgetIcon = ({
   bottom = 16,
   right = 16,
+  screenName,
   enableShineAnimation = true,
-  onPress,
   iconUri,
-}: TChatWidgetIconProps): JSX.Element => {
-  const [showBubble, setShowBubble] = React.useState(false);
+  onPress: onPressCallback,
+}: ChatWidgetIconProps): JSX.Element | null => {
+  const { showChatWithUsModalState, setShowChatWithUsModal } = useRiaChatBot();
+  const [showBubble, setShowBubble] = useState(false);
   const shineProgress = useSharedValue(0);
 
-  React.useEffect(() => {
-    if (!enableShineAnimation) return;
+  // Determine image source - use passed iconUri or fallback to SDK default
+  const imageSource = iconUri
+    ? typeof iconUri === 'string'
+      ? { uri: iconUri }
+      : iconUri
+    : require('../assets/chatWidget.png');
+
+  useEffect(() => {
+    if (!enableShineAnimation || showChatWithUsModalState) return;
 
     const startShineAnimation = () => {
       shineProgress.value = withSequence(
@@ -48,17 +59,18 @@ export const ChatWidgetIcon = ({
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [enableShineAnimation, shineProgress]);
+  }, [enableShineAnimation, showChatWithUsModalState, shineProgress]);
 
-  const handlePress = () => {
-    if (onPress) onPress();
+  const onPress = () => {
+    onPressCallback?.(screenName);
+    setShowChatWithUsModal(true);
   };
 
-  const handleLongPress = () => {
+  const onLongPress = () => {
     setShowBubble(true);
   };
 
-  const handlePressOut = () => {
+  const onPressOut = () => {
     setShowBubble(false);
   };
 
@@ -86,29 +98,27 @@ export const ChatWidgetIcon = ({
 
     return {
       opacity,
-      transform: [{ translateX }, { translateY }],
+      transform: [{ translateX: translateX }, { translateY: translateY }] as any,
     };
   });
 
+  if (showChatWithUsModalState) {
+    return null;
+  }
+
   return (
     <View style={[styles.container, { bottom, right }]}>
-      <TouchableOpacity
-        onPress={handlePress}
-        onLongPress={handleLongPress}
-        onPressOut={handlePressOut}
+      <SDKPressable
+        onPress={onPress}
+        onLongPress={onLongPress}
+        onPressOut={onPressOut}
       >
         <View style={styles.iconWrapper}>
-          {iconUri ? (
-            <Image source={{ uri: iconUri }} style={styles.chatIcon} />
-          ) : (
-            <View style={[styles.chatIcon, styles.defaultIconContainer]}>
-              <Text style={styles.defaultChatIcon}>💬</Text>
-            </View>
-          )}
+          <Image source={imageSource} style={styles.chatIcon} />
           {enableShineAnimation && (
             <Animated.View
               pointerEvents="none"
-              // @ts-ignore
+              // @ts-ignore - Type instantiation depth issue with Animated styles
               style={[styles.shineContainer, shineAnimatedStyle]}
             >
               <LinearGradient
@@ -130,7 +140,7 @@ export const ChatWidgetIcon = ({
             </Animated.View>
           )}
         </View>
-      </TouchableOpacity>
+      </SDKPressable>
       {showBubble && (
         <PopupBubbleText text="Chat with us" style={styles.bubblePosition} />
       )}
@@ -138,19 +148,7 @@ export const ChatWidgetIcon = ({
   );
 };
 
-interface TChatWidgetIconStyles {
-  container: ViewStyle;
-  bubblePosition: ViewStyle;
-  chatIcon: ImageStyle;
-  iconWrapper: ViewStyle;
-  shineContainer: ViewStyle;
-  shineGradient: ViewStyle;
-  defaultIconContainer: ViewStyle;
-  defaultChatIcon: TextStyle;
-  [key: string]: ViewStyle | ImageStyle | TextStyle;
-}
-
-const styles = StyleSheet.create<TChatWidgetIconStyles>({
+const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     zIndex: 10,
@@ -183,14 +181,5 @@ const styles = StyleSheet.create<TChatWidgetIconStyles>({
   shineGradient: {
     width: '100%',
     height: '100%',
-  },
-  defaultIconContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#3B82F6',
-  },
-  defaultChatIcon: {
-    fontSize: 24,
-    color: '#FFFFFF',
   },
 });

@@ -1,62 +1,56 @@
-import { type JSX } from "react";
-import { Linking, View, StyleSheet, Text } from "react-native"
-import type { TextStyle, ViewStyle } from 'react-native';
-import { Colors, Spacings } from '../tokens';
+import { View, StyleSheet } from 'react-native';
+import { SDKText } from './ui';
+import { RDColors, Spacings } from '../assets';
+import { useRiaChatBot } from '../context';
 
 interface AiDisclaimerProps {
-    showDisclaimer?: boolean;
-    previousChatSession?: { id?: string | null };
-    chatMessages?: any[];
+  showDisclaimer?: boolean;
 }
 
-export const AiDisclaimer = ({ showDisclaimer = true, previousChatSession = { id: null }, chatMessages = [] }: AiDisclaimerProps): JSX.Element | null => {
-    if (previousChatSession?.id || !showDisclaimer || chatMessages.length > 2) {
-        return null;
-    }
+export const AiDisclaimer = ({ showDisclaimer }: AiDisclaimerProps) => {
+  const { state } = useRiaChatBot();
+  const { previousChatSession, chatMessages } = state;
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.disclaimerText}>
-                When using RIA, you are agreeing to Rently’s{' '}
-                <Text
-                    style={styles.linkText}
-                    onPress={() => Linking.openURL("https://use.rently.com/terms-of-use")}
-                >
-                    Terms of Use
-                </Text>
-                {' '}and{' '}
-                <Text
-                    style={styles.linkText}
-                    onPress={() => Linking.openURL("https://use.rently.com/privacy-policy")}
-                >
-                    Privacy Policy
-                </Text>
-                . All conversations are recorded, shared, reviewed, and retained to improve Rently's AI performance.
-            </Text>
-        </View>
-    )
-}
+  if (previousChatSession?.id || !showDisclaimer || chatMessages.length > 2) {
+    return null;
+  }
 
-interface TAiDisclaimerStyles {
-    container: ViewStyle;
-    disclaimerText: TextStyle;
-    linkText: TextStyle;
-    [key: string]: ViewStyle | TextStyle;
-}
+  return (
+    <View style={styles.container}>
+      <SDKText variant="XSmall" weight="Regular" style={styles.disclaimerText}>
+        When using RIA, you are agreeing to Rently's{' '}
+        <SDKText
+          variant="XSmall"
+          weight="Regular"
+          style={styles.linkText}
+        >
+          Terms of Use
+        </SDKText>
+        {' '}and{' '}
+        <SDKText
+          variant="XSmall"
+          weight="Regular"
+          style={styles.linkText}
+        >
+          Privacy Policy
+        </SDKText>
+        . All conversations are recorded, shared, reviewed, and retained to improve Rently's AI performance.
+      </SDKText>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create<TAiDisclaimerStyles>({
-    container: {
-        marginHorizontal: Spacings.x_sm,
-        marginTop: Spacings.sm,
-    },
-    disclaimerText: {
-        fontSize: 12,
-        fontWeight: '400',
-        color: Colors.neutral[500],
-    },
-    linkText: {
-        fontSize: 12,
-        fontWeight: '400',
-        color: Colors.tertiary[600],
-    },
-})
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: Spacings.md,
+    paddingVertical: Spacings.sm,
+  },
+  disclaimerText: {
+    color: RDColors.neutral[500],
+    textAlign: 'center',
+  },
+  linkText: {
+    color: RDColors.tertiary[600],
+    textDecorationLine: 'underline',
+  },
+});

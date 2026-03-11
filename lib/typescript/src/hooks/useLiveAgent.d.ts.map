@@ -1,0 +1,1 @@
+{"version":3,"file":"useLiveAgent.d.ts","sourceRoot":"","sources":["../../../../src/hooks/useLiveAgent.ts"],"names":[],"mappings":"AAGA;;;;GAIG;AACH,eAAO,MAAM,YAAY,GAAI,4CAG1B;IACD,mBAAmB,CAAC,EAAE,GAAG,CAAC;IAC1B,gBAAgB,CAAC,EAAE,CAAC,SAAS,EAAE,MAAM,EAAE,UAAU,CAAC,EAAE,GAAG,KAAK,IAAI,CAAC;CAClE;;;CA0FA,CAAC"}

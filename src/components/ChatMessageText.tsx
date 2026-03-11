@@ -1,89 +1,91 @@
-import { type JSX } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
-import type { ViewStyle } from 'react-native';
-import { Colors, Spacings } from '../tokens';
-
-interface TChatMessageType {
-  id?: string;
-  content?: string;
-  timestamp?: string;
-  user?: string;
-  senderName?: string;
-  likeStatus?: number;
-}
+import type { JSX } from 'react';
+import { Image, StyleSheet, View, type ViewStyle } from 'react-native';
+import { RDColors } from '../assets/colors';
+import { Spacings } from '../assets/spacings';
+import { SDKBadge, SDKHeroIcon, SDKPressable, SDKText, TextStyleFromMarkup, type IconNameTypes } from './ui';
+import { useRiaChatBot } from '../context/RiaChatBotContext';
+import { type TChatMessageType, CHATBOT_USER_ENUM } from '../types';
 
 interface LikeButtonProps {
   onPress: () => void;
   status: number;
-  currentStatus?: number;
-  iconName: string;
+  currentStatus: number | undefined;
+  iconName: IconNameTypes;
   style?: ViewStyle;
 }
 
-interface ChatMessageTextProps {
-  message: TChatMessageType;
-  onLike?: (messageId: string, likeStatus: number) => void;
-  onDislike?: (messageId: string, likeStatus: number) => void;
-  chatWidgetUri?: string;
-  rentlyChatIconUri?: string;
-}
-
-const LikeButton = ({ onPress, status, currentStatus, iconName, style }: LikeButtonProps): JSX.Element => {
+const LikeButton = ({
+  onPress,
+  status,
+  currentStatus,
+  iconName,
+  style,
+}: LikeButtonProps): JSX.Element => {
   const isSelected = status === currentStatus;
-  const backgroundColor = isSelected
-    ? Colors.neutral[100]
-    : undefined;
+  const backgroundColor = isSelected ? RDColors.tertiary[200] : undefined;
 
   return (
-    <TouchableOpacity
-      style={[styles.likeButton, { backgroundColor }, style]}
+    <SDKPressable
+      style={[styles.likeButton, { backgroundColor }, ...(style ? [style] : [])]}
       onPress={onPress}
     >
-      <Text style={[styles.likeIcon, isSelected && (status === 1 ? styles.selectedLike : styles.selectedDislike)]}>
-        {iconName}
-      </Text>
-    </TouchableOpacity>
+      <SDKHeroIcon
+        iconName={iconName}
+        size={24}
+        fontWeight={'Regular'}
+        isSolid={isSelected}
+      />
+    </SDKPressable>
   );
 };
 
-export const LiveAgentMessageText = ({ message, rentlyChatIconUri }: { message: TChatMessageType; rentlyChatIconUri?: string }): JSX.Element => {
+export const LiveAgentMessageText = ({
+  message,
+}: {
+  message: TChatMessageType;
+}): JSX.Element => {
   const { timestamp = '', content = '', senderName = 'Live Agent' } = message;
   return (
     <View style={styles.aiMessageContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
-          {rentlyChatIconUri ? (
-            <Image source={{ uri: rentlyChatIconUri }} style={styles.chatWidget} />
-          ) : (
-            <Text style={styles.chatWidget}>💬</Text>
-          )}
+          <Image
+            source={require('../assets/chatWidget.png')}
+            style={styles.chatWidget}
+          />
           <View>
-            <Text style={styles.senderName}>{senderName}</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
+            <SDKText variant="Small" weight="Medium">
+              {senderName}
+            </SDKText>
+            <SDKText variant="XSmall" color={RDColors.neutral[600]}>
+              {timestamp}
+            </SDKText>
           </View>
         </View>
       </View>
       <View>
-        <Text style={styles.messageContent}>{content}</Text>
+        <TextStyleFromMarkup text={content} variant="Small" />
       </View>
     </View>
   );
 };
 
-export const AIChatMessageText = ({ message, onLike, onDislike, chatWidgetUri }: { message: TChatMessageType; onLike?: (messageId: string, likeStatus: number) => void; onDislike?: (messageId: string, likeStatus: number) => void; chatWidgetUri?: string }): JSX.Element => {
+export const AIChatMessageText = ({
+  message,
+  onLikePress: onLikePressCallback,
+}: {
+  message: TChatMessageType;
+  onLikePress?: (params: { messageId: string; likeStatus: number }) => void;
+}): JSX.Element => {
   const { timestamp = '', content = '', id = '', likeStatus } = message || {};
+  const { updateMessageLike, toggleMessageLike } = useRiaChatBot();
 
   const handleLikePress = (newStatus: number) => {
     const newLikeStatus = likeStatus === newStatus ? 0 : newStatus;
-    if (id && onLike) {
-      onLike(id, newLikeStatus);
-    }
-  };
-
-  const handleDislikePress = (newStatus: number) => {
-    const newLikeStatus = likeStatus === newStatus ? 0 : newStatus;
-    if (id && onDislike) {
-      onDislike(id, newLikeStatus);
+    if (id) {
+      updateMessageLike(id, newLikeStatus);
+      toggleMessageLike(id, newLikeStatus);
+      onLikePressCallback?.({ messageId: id, likeStatus: newLikeStatus });
     }
   };
 
@@ -91,57 +93,77 @@ export const AIChatMessageText = ({ message, onLike, onDislike, chatWidgetUri }:
     <View style={styles.aiMessageContainer}>
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
-          {chatWidgetUri ? (
-            <Image source={{ uri: chatWidgetUri }} style={styles.chatWidget} />
-          ) : (
-            <Text style={styles.chatWidget}>💬</Text>
-          )}
+          <Image
+            source={require('../assets/chatWidget.png')}
+            style={styles.chatWidget}
+          />
           <View>
-            <Text style={styles.senderName}>RIA</Text>
-            <Text style={styles.timestamp}>{timestamp}</Text>
+            <SDKText variant="Small" weight="Medium">
+              RIA
+            </SDKText>
+            <SDKText variant="XSmall" color={RDColors.neutral[600]}>
+              {timestamp}
+            </SDKText>
           </View>
         </View>
         <View style={styles.iconContainer}>
           <LikeButton
-            onPress={() => handleDislikePress(-1)}
+            onPress={() => handleLikePress(-1)}
             status={-1}
             currentStatus={likeStatus}
-            iconName="👎"
+            iconName="ThumbDownIcon"
             style={styles.likeButtonGap}
           />
           <LikeButton
             onPress={() => handleLikePress(1)}
             status={1}
             currentStatus={likeStatus}
-            iconName="👍"
+            iconName="ThumbUpIcon"
           />
         </View>
       </View>
       <View>
-        <Text style={styles.messageContent}>{content}</Text>
+        <TextStyleFromMarkup text={content} variant="Small" />
       </View>
     </View>
   );
 };
 
-export const UserChatMessageText = ({ message }: { message: TChatMessageType }): JSX.Element => {
+export const UserChatMessageText = ({
+  message,
+}: {
+  message: TChatMessageType;
+}): JSX.Element => {
   return (
     <View style={styles.userMessageContainer}>
-      <View style={styles.userBadge}>
-        <Text style={styles.userMessageText}>{message.content}</Text>
-      </View>
+      <SDKBadge
+        text={message.content}
+        backgroundColor={RDColors.shades[0]}
+        borderRadius={20}
+        textVariant="Small"
+        textWeight="Regular"
+        paddingVertical={Spacings.sm}
+        paddingHorizontal={Spacings.sm}
+        textColor={RDColors.shades[200]}
+      />
     </View>
   );
 };
 
-export const ChatMessageText = ({ message, onLike, onDislike, chatWidgetUri, rentlyChatIconUri }: ChatMessageTextProps): JSX.Element => {
+export const ChatMessageText = ({
+  message,
+  onLikePress,
+}: {
+  message: TChatMessageType;
+  onLikePress?: (params: { messageId: string; likeStatus: number }) => void;
+}): JSX.Element => {
   switch (message.user) {
-    case 'AI':
-      return <AIChatMessageText message={message} onLike={onLike} onDislike={onDislike} chatWidgetUri={chatWidgetUri} />;
-    case 'PROSPECT':
+    case CHATBOT_USER_ENUM.AI:
+      return <AIChatMessageText message={message} onLikePress={onLikePress} />;
+    case CHATBOT_USER_ENUM.PROSPECT:
       return <UserChatMessageText message={message} />;
-    case 'LIVE_AGENT':
-      return <LiveAgentMessageText message={message} rentlyChatIconUri={rentlyChatIconUri} />;
+    case CHATBOT_USER_ENUM.LIVE_AGENT:
+      return <LiveAgentMessageText message={message} />;
     default:
       return <UserChatMessageText message={message} />;
   }
@@ -167,7 +189,7 @@ const styles = StyleSheet.create({
   },
   likeButton: {
     transform: [{ scaleX: -1 }],
-    borderRadius: 20,
+    borderRadius: 40,
     padding: Spacings.x_sm,
   },
   aiMessageContainer: {
@@ -178,14 +200,6 @@ const styles = StyleSheet.create({
     marginTop: Spacings.sm,
     marginBottom: Spacings.big,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
-  userBadge: {
-    backgroundColor: Colors.shades[0],
-    borderRadius: 20,
-    paddingVertical: Spacings.sm,
-    paddingHorizontal: Spacings.md,
-    maxWidth: '80%',
   },
   chatWidget: {
     width: 40,
@@ -193,32 +207,5 @@ const styles = StyleSheet.create({
   },
   likeButtonGap: {
     marginRight: Spacings.sm,
-  },
-  senderName: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: Colors.neutral[900],
-  },
-  timestamp: {
-    fontSize: 10,
-    color: Colors.neutral[600],
-  },
-  messageContent: {
-    fontSize: 14,
-    color: Colors.neutral[900],
-  },
-  likeIcon: {
-    fontSize: 16,
-    color: Colors.neutral[600],
-  },
-  selectedLike: {
-    color: Colors.success[600],
-  },
-  selectedDislike: {
-    color: Colors.error[600],
-  },
-  userMessageText: {
-    fontSize: 14,
-    color: Colors.shades[200],
   },
 });

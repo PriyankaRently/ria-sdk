@@ -1,11 +1,6 @@
-import { type JSX } from "react";
 interface AiDisclaimerProps {
     showDisclaimer?: boolean;
-    previousChatSession?: {
-        id?: string | null;
-    };
-    chatMessages?: any[];
 }
-export declare const AiDisclaimer: ({ showDisclaimer, previousChatSession, chatMessages }: AiDisclaimerProps) => JSX.Element | null;
+export declare const AiDisclaimer: ({ showDisclaimer }: AiDisclaimerProps) => import("react/jsx-runtime").JSX.Element | null;
 export {};
 //# sourceMappingURL=AiDisclaimer.d.ts.map

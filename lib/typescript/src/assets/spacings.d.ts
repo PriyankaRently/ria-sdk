@@ -1,35 +1,23 @@
-export declare const Spacings: {
-    /** Extra-extra small spacing */
+/**
+ * RIA SDK Spacing Scale
+ * Minimal spacing values used in RIA chatbot components
+ * Values are in pixels (no scaling needed for SDK)
+ */
+declare const Spacings: {
+    /** Extra-extra small spacing - 4px */
     readonly xx_sm: 4;
-    /** Extra small spacing */
+    /** Extra small spacing - 8px */
     readonly x_sm: 8;
-    /** Small spacing */
+    /** Small spacing - 12px */
     readonly sm: 12;
-    /** Medium spacing */
+    /** Medium spacing - 16px */
     readonly md: 16;
-    /** Big spacing */
+    /** Big spacing - 20px */
     readonly big: 20;
-    /** Extra big spacing */
-    readonly x_big: 24;
-    /** Extra-extra big spacing */
+    /** Extra-extra big spacing - 28px */
     readonly xx_big: 28;
-    /** Extra-extra-extra big spacing */
-    readonly xxx_big: 32;
-    /** Large spacing */
+    /** Large spacing - 40px */
     readonly lg: 40;
-    /** Extra large spacing */
-    readonly x_lg: 48;
-    /** Extra-extra large spacing */
-    readonly xx_lg: 64;
-    /** Extra-extra-extra large spacing */
-    readonly xxx_lg: 80;
-    /** Huge spacing */
-    readonly huge: 96;
-    /** Extra huge spacing */
-    readonly x_huge: 128;
-    /** Extra-extra huge spacing */
-    readonly xx_huge: 160;
-    /** Extra-extra-extra huge spacing */
-    readonly xxx_huge: 192;
 };
+export { Spacings };
 //# sourceMappingURL=spacings.d.ts.map

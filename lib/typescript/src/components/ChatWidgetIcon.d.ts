@@ -1,11 +1,13 @@
 import { type JSX } from 'react';
-interface TChatWidgetIconProps {
+import { type ImageSourcePropType } from 'react-native';
+interface ChatWidgetIconProps {
     bottom?: number;
     right?: number;
+    screenName: string;
     enableShineAnimation?: boolean;
-    onPress?: () => void;
-    iconUri?: string;
+    iconUri?: string | ImageSourcePropType;
+    onPress?: (screenName: string) => void;
 }
-export declare const ChatWidgetIcon: ({ bottom, right, enableShineAnimation, onPress, iconUri, }: TChatWidgetIconProps) => JSX.Element;
+export declare const ChatWidgetIcon: ({ bottom, right, screenName, enableShineAnimation, iconUri, onPress: onPressCallback, }: ChatWidgetIconProps) => JSX.Element | null;
 export {};
 //# sourceMappingURL=ChatWidgetIcon.d.ts.map
