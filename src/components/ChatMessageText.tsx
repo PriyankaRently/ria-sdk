@@ -50,7 +50,7 @@ export const LiveAgentMessageText = ({
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
           <Image
-            source={require('../assets/chatWidget.png')}
+            source={require('../assets/icons/chatWidget.png')}
             style={styles.chatWidget}
           />
           <View>
@@ -94,7 +94,7 @@ export const AIChatMessageText = ({
       <View style={styles.headingContainer}>
         <View style={styles.subHeadingContainer}>
           <Image
-            source={require('../assets/chatWidget.png')}
+            source={require('../assets/icons/chatWidget.png')}
             style={styles.chatWidget}
           />
           <View>
