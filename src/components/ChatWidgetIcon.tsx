@@ -40,7 +40,7 @@ export const ChatWidgetIcon = ({
     ? typeof iconUri === 'string'
       ? { uri: iconUri }
       : iconUri
-    : require('../assets/chatWidget.png');
+    : require('../assets/icons/chatWidget.png');
 
   useEffect(() => {
     if (!enableShineAnimation || showChatWithUsModalState) return;
